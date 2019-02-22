@@ -33,7 +33,7 @@ public class TicketToRideController {
 	protected ScrollPane mapPane;
 	
 	@FXML
-	protected AnchorPane mapAnchorPane;
+	protected MapPane mapAnchorPane;
 	@FXML
 	protected Canvas mapCanvas;
 
@@ -48,6 +48,8 @@ public class TicketToRideController {
 		mapCanvas.widthProperty().bind(Bindings.max(MIN_MAP_WIDTH, mapPane.widthProperty().subtract(15.0)));
 		mapCanvas.heightProperty().bind(Bindings.max(MIN_MAP_HEIGHT, mapPane.heightProperty().subtract(15.0)));
 		
+		mapAnchorPane.getMapProperty().bind(mapData);
+		mapAnchorPane.setBackgroundCanvas(mapCanvas);
 		
 		mapData.addListener((mapData) -> paintMap());
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
@@ -126,32 +128,32 @@ public class TicketToRideController {
 		
 			
 
-			Map<Destination, Point> destinationPoints = new HashMap<>();
-			
-			//Draw cities
-			for(Destination dest : map.getDestinations()) {
-				gc.setFill(Color.BLACK);
-				
-				double x = dest.getXFraction() * mapCanvas.getWidth();
-				double y = dest.getYFraction() * mapCanvas.getHeight();
-				
-				destinationPoints.put(dest, new Point(x,y));
-
-				x -= destinationCircleDiameter/2;
-				y -= destinationCircleDiameter/2;
-				
-				gc.strokeOval(x, y, destinationCircleDiameter, destinationCircleDiameter);
-				
-				gc.strokeText(dest.getName(), x + destinationCircleDiameter, y);
-			}
-			
-			//Draw connections
-			for(Connection conn : map.getConnections()) {
-				Point start = destinationPoints.get(conn.getStart());
-				Point end = destinationPoints.get(conn.getEnd());
-				
-				gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-			}
+//			Map<Destination, Point> destinationPoints = new HashMap<>();
+//			
+//			//Draw cities
+//			for(Destination dest : map.getDestinations()) {
+//				gc.setFill(Color.BLACK);
+//				
+//				double x = dest.getXFraction() * mapCanvas.getWidth();
+//				double y = dest.getYFraction() * mapCanvas.getHeight();
+//				
+//				destinationPoints.put(dest, new Point(x,y));
+//
+//				x -= destinationCircleDiameter/2;
+//				y -= destinationCircleDiameter/2;
+//				
+//				gc.strokeOval(x, y, destinationCircleDiameter, destinationCircleDiameter);
+//				
+//				gc.strokeText(dest.getName(), x + destinationCircleDiameter, y);
+//			}
+//			
+//			//Draw connections
+//			for(Connection conn : map.getConnections()) {
+//				Point start = destinationPoints.get(conn.getStart());
+//				Point end = destinationPoints.get(conn.getEnd());
+//				
+//				gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+//			}
 		}
 	}
 	

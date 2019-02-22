@@ -10,6 +10,7 @@
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import tickettoride.ui.MapPane?>
 
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tickettoride.ui.TicketToRideController">
@@ -28,7 +29,7 @@
    <center>
       <ScrollPane fx:id="mapPane" fitToHeight="true" fitToWidth="true" minViewportHeight="10.0" minViewportWidth="10.0" prefHeight="10.0" prefViewportHeight="10.0" prefViewportWidth="10.0" prefWidth="10.0" BorderPane.alignment="CENTER">
         <content>
-          <AnchorPane fx:id="mapAnchorPane">
+          <MapPane fx:id="mapAnchorPane">
                <children>
                   <Canvas fx:id="mapCanvas" height="400.0" width="400.0">
                      <effect>
@@ -43,7 +44,7 @@
                      </effect>
                   </Canvas>
                </children>
-            </AnchorPane>
+            </MapPane>
         </content>
       </ScrollPane>
    </center>
