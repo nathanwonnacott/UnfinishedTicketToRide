@@ -2,10 +2,16 @@ package tickettoride.mapdata;
 
 import java.util.Collection;
 
+import javafx.scene.image.Image;
+
 public interface MapData {
 
 	
 	public Collection<Destination> getDestinations();
+	
+	public Collection<Connection> getConnections();
+	
+	public Image getBackgroundImage();
 	
 	public class Destination {
 		private final String name;
@@ -29,6 +35,29 @@ public interface MapData {
 		public double getYFraction() {
 			return yFraction;
 		}
+		
+	}
+	
+	public class Connection {
+		private final Destination start;
+		private final Destination end;
+		//TODO add in path segment information
+		
+		public Connection(Destination start, Destination end) {
+			this.start = start;
+			this.end = end;
+		}
+		
+		public Destination getStart() {
+			return start;
+		}
+		
+		public Destination getEnd() {
+			return end;
+		}
+	}
+	
+	public class PathSegment {
 		
 	}
 }
