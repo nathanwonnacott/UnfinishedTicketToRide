@@ -1,10 +1,17 @@
 package tickettoride.ui;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Glow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -13,14 +20,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import tickettoride.mapdata.MapData;
 import tickettoride.mapdata.MapData.Destination;
+import tickettoride.utilities.MappedBinding;
 
 public class MapPane extends AnchorPane {
 
 	private Property<MapData> mapDataProperty = new SimpleObjectProperty<>();
 	
 	private Canvas backgroundCanvas;
-	
+
 	private final double DEST_RADIUS = 10.0;
+
+	private final double HIGHLIGHTED_DEST_RADIUS = 12.0;
 	
 	public MapPane() {
 		mapDataProperty.addListener((m) -> setupMap());
@@ -55,15 +65,39 @@ public class MapPane extends AnchorPane {
 		for(Destination dest : mapData.getDestinations()) {
 			
 			Circle destCircle = new Circle();
-			destCircle.setRadius(DEST_RADIUS);
+			destCircle.setStrokeWidth(2);
+			destCircle.setStroke(Color.color(0.15, 0.05, 0));
+			
 			destCircle.centerXProperty().bind(backgroundCanvas.widthProperty().multiply(dest.getXFraction()));
 			destCircle.centerYProperty().bind(backgroundCanvas.heightProperty().multiply(dest.getYFraction()));
 			
-			//TODO, come up with a better effect than this.
-			//For now, I'm just proving the concept that effects can by applied when mousing over the
-			//cities
-			destCircle.setOnMouseEntered((evt) -> destCircle.setEffect(new Glow(0.8)));
-			destCircle.setOnMouseExited((evt) -> destCircle.setEffect(null));
+			//Set up highlighting effects for when mouse is over circle
+			BooleanProperty highlighted = new SimpleBooleanProperty(false);
+			destCircle.setOnMouseEntered((evt) -> highlighted.set(true));
+			destCircle.setOnMouseExited((evt) -> highlighted.set(false));
+			
+			Color fillColor = Color.color(1, 1, 1, 0.1);
+			Color highlightedFillColor = Color.color(1,  1,  1, 0.5);
+			
+			destCircle.fillProperty().bind(
+					MappedBinding.createBinding(highlighted,  (h) -> h ? highlightedFillColor : fillColor)
+					);
+			
+			
+			destCircle.radiusProperty().bind(
+					MappedBinding.createBinding(highlighted, (h) -> h ? HIGHLIGHTED_DEST_RADIUS : DEST_RADIUS)
+					);
+			
+
+			Effect normalEffects = new GaussianBlur(2);
+			DropShadow glow = new DropShadow(HIGHLIGHTED_DEST_RADIUS * 1.2, Color.LIGHTYELLOW);
+			glow.setInput(normalEffects);
+			destCircle.effectProperty().bind(
+					MappedBinding.createBinding(highlighted, (h) -> h ? glow : normalEffects)
+					);
+			
+			
+			
 			this.getChildren().add(destCircle);
 		}
 		
