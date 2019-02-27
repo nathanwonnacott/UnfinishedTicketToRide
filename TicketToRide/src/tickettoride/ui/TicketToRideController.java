@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -36,7 +37,9 @@ public class TicketToRideController {
 	protected MapPane mapAnchorPane;
 	@FXML
 	protected Canvas mapCanvas;
-
+	
+	@FXML
+	protected ImageView backgroundImage;
 	
 	private final double MIN_MAP_WIDTH = 400;
 	private final double MIN_MAP_HEIGHT = 400;
@@ -47,6 +50,11 @@ public class TicketToRideController {
 
 		mapCanvas.widthProperty().bind(Bindings.max(MIN_MAP_WIDTH, mapPane.widthProperty().subtract(15.0)));
 		mapCanvas.heightProperty().bind(Bindings.max(MIN_MAP_HEIGHT, mapPane.heightProperty().subtract(15.0)));
+		
+		backgroundImage.fitWidthProperty().bind(mapCanvas.widthProperty());
+		backgroundImage.fitHeightProperty().bind(mapCanvas.heightProperty());
+		
+		mapCanvas.setOpacity(0.5);
 		
 		mapAnchorPane.getMapProperty().bind(mapData);
 		mapAnchorPane.setBackgroundCanvas(mapCanvas);

@@ -1,23 +1,18 @@
 package tickettoride.ui;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.Glow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import tickettoride.mapdata.MapData;
 import tickettoride.mapdata.MapData.Destination;
 import tickettoride.utilities.MappedBinding;
@@ -34,7 +29,6 @@ public class MapPane extends AnchorPane {
 	
 	public MapPane() {
 		mapDataProperty.addListener((m) -> setupMap());
-		this.setBackground(new Background(new BackgroundFill(Color.web("#ff0000"), CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 	
 	//TODO, see if this can somehow just be set automatically by FXML
@@ -47,19 +41,15 @@ public class MapPane extends AnchorPane {
 	}
 	
 	private void setupMap() {
-		System.out.println("Setting up map!");
 		
-		this.getChildren().clear();
-		if(backgroundCanvas != null)
-			this.getChildren().add(backgroundCanvas);
-		
+
 		MapData mapData = mapDataProperty.getValue();
-		
 		if(mapData == null) {
-			System.out.println("Null map data");
 			return;
 		}
 		
+		this.getChildren().clear();
+		this.getChildren().add(backgroundCanvas);
 		
 		//Setup destinations
 		for(Destination dest : mapData.getDestinations()) {
@@ -97,8 +87,21 @@ public class MapPane extends AnchorPane {
 					);
 			
 			
+			Text cityName = new Text(dest.getName());
+			cityName.yProperty().bind(destCircle.centerYProperty());
+			cityName.xProperty().bind(destCircle.centerXProperty().add(destCircle.radiusProperty().add(5)));
+			
+			cityName.effectProperty().bind(
+					MappedBinding.createBinding(highlighted, (h) -> h ? glow : normalEffects)
+					);
+			cityName.fontProperty().bind(
+					MappedBinding.createBinding(highlighted, (h) -> h ? new Font(24) : new Font(10))
+					);
+			
+			
 			
 			this.getChildren().add(destCircle);
+			this.getChildren().add(cityName);
 		}
 		
 	}
