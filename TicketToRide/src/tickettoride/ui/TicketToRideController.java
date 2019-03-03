@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
@@ -78,7 +80,7 @@ public class TicketToRideController {
 		Destination d2 = new Destination("Paradise City", 0.6, 0.7);
 		Destination d3 = new Destination("SuperdyDuperBurgh", 0.2, 0.8);
 		Destination d4 = new Destination("Justokayville", 0.3, 0.4);
-		
+				
 		mapData.setValue(new MapData() {
 
 			@Override
@@ -92,13 +94,18 @@ public class TicketToRideController {
 			}
 
 			@Override
+			public Collection<Connection> getConnectionsToOrFromDest(Destination dest) {
+				return getConnections().stream().filter(c -> c.getStart().equals(dest) || c.getEnd().equals(dest))
+									.collect(Collectors.toList());
+			}
+
+			@Override
 			public Collection<Connection> getConnections() {
-				return Arrays.asList(new Connection(d1, d3),
-									new Connection(d1, d2),
-									new Connection(d2, d3),
-									new Connection(d3, d4),
-									new Connection(d4, d2)
-						);
+				return Arrays.asList(new Connection(d1, d3, CardColor.BLACK, 3),
+						new Connection(d1, d2, CardColor.YELLOW, 1),
+						new Connection(d2, d3, CardColor.ORANGE, 2),
+						new Connection(d3, d4, CardColor.ANY, 3),
+						new Connection(d4, d1, CardColor.GREEN, 3));
 			}
 			
 		});
