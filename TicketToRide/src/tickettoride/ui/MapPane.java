@@ -88,6 +88,8 @@ public class MapPane extends AnchorPane {
 			Color fillColor = Color.color(1, 1, 1, 0.1);
 			Color highlightedFillColor = Color.color(1,  1,  1, 0.5);
 			
+			destCircle.fillProperty().set(Color.WHITE);
+			destCircle.radiusProperty().set(DEST_RADIUS);
 			destCircle.fillProperty().bind(
 					MappedBinding.createBinding(highlighted,  (h) -> h ? highlightedFillColor : fillColor)
 					);
@@ -119,8 +121,13 @@ public class MapPane extends AnchorPane {
 			
 			
 			circles.put(dest, destCircle);
-			this.getChildren().add(destCircle);
+
+			//Note that it's important that the name is added before the circle. Otherwise, when the
+			//mouse is on the right hand side of the circle, the text enlarging basically steals the mouse
+			//and makes a mouse exit event for the circle, which causes the highlighted state to fluctuate
+			//back and forth rapidly. By putting the dest circle on top, the circle has precedence.
 			this.getChildren().add(cityName);
+			this.getChildren().add(destCircle);
 		}
 		
 		//Setup connections
@@ -177,17 +184,13 @@ public class MapPane extends AnchorPane {
 				Rectangle segmentRect = new Rectangle();
 				segmentRect.setArcHeight(5);
 				segmentRect.setArcWidth(5);
-				segmentRect.setOpacity(0.5);
+				segmentRect.setOpacity(0.8);
 				
 				Paint fillColor = null;
 				
 				switch(conn.getColor()) {
 				case ANY:
-					fillColor = new LinearGradient(0,0,0.2,0.2,true, 
-													CycleMethod.REPEAT, 
-													new Stop(0, Color.RED),
-													new Stop(1, Color.YELLOW),
-													new Stop(2, Color.BLUE));
+					fillColor = Color.GREY;
 					break;
 				case BLACK:
 					fillColor = Color.BLACK;
