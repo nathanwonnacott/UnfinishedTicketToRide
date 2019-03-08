@@ -105,6 +105,7 @@ public class TicketToRideController {
 						new Connection(d1, d2, CardColor.YELLOW, 1),
 						new Connection(d2, d3, CardColor.ORANGE, 2),
 						new Connection(d3, d4, CardColor.ANY, 3),
+						new Connection(d4, d3, CardColor.BLUE, 3),
 						new Connection(d4, d1, CardColor.GREEN, 3));
 			}
 			
