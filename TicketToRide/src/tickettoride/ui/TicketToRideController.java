@@ -21,7 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import tickettoride.mapdata.MapData;
 import tickettoride.mapdata.MapData.Connection;
 import tickettoride.mapdata.MapData.Destination;
@@ -42,6 +44,19 @@ public class TicketToRideController {
 	
 	@FXML
 	protected ImageView backgroundImage;
+	
+	@FXML
+	protected Rectangle cardToDraw1;
+	@FXML
+	protected Rectangle cardToDraw2;
+	@FXML
+	protected Rectangle cardToDraw3;
+	@FXML
+	protected Rectangle cardToDraw4;
+	@FXML
+	protected Rectangle cardToDraw5;
+	@FXML
+	protected Rectangle deck;
 	
 	private final double MIN_MAP_WIDTH = 400;
 	private final double MIN_MAP_HEIGHT = 400;
@@ -65,6 +80,9 @@ public class TicketToRideController {
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
 		mapCanvas.heightProperty().addListener((mapData) -> paintMap());
 		
+		File transportCardBackImageFile = new File("C:/Users/nate/git/TicketToRide/TicketToRide/resources/images/cardBack.jpg");
+		Image transportCardBack = new Image(transportCardBackImageFile.toURI().toString());
+		deck.setFill(new ImagePattern(transportCardBack));
 	}
 	
 	@FXML

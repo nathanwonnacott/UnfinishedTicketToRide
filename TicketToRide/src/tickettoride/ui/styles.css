@@ -1,0 +1,11 @@
+
+.card {
+	-fx-arc-width:20;
+	-fx-arc-height:20;
+	-fx-padding:10 10 10 10;
+}
+
+.empty-card {
+	-fx-fill:#00000000;
+	-fx-stroke:#19e80b;
+}

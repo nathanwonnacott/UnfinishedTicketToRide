@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Menu?>
@@ -12,9 +14,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import tickettoride.ui.MapPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tickettoride.ui.TicketToRideController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tickettoride.ui.TicketToRideController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -57,4 +61,47 @@
         </content>
       </ScrollPane>
    </center>
+   <right>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5" BorderPane.alignment="CENTER">
+         <children>
+            <Rectangle fx:id="cardToDraw1" height="75" width="120">
+               <styleClass>
+                  <String fx:value="card" />
+                  <String fx:value="empty-card" />
+               </styleClass>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Rectangle>
+            <Rectangle fx:id="cardToDraw2" height="75.0" width="120">
+               <styleClass>
+                  <String fx:value="card" />
+                  <String fx:value="empty-card" />
+               </styleClass>
+            </Rectangle>
+            <Rectangle fx:id="cardToDraw3" height="75" width="120">
+               <styleClass>
+                  <String fx:value="card" />
+                  <String fx:value="empty-card" />
+               </styleClass>
+            </Rectangle>
+            <Rectangle fx:id="cardToDraw4" height="75" width="120">
+               <styleClass>
+                  <String fx:value="card" />
+                  <String fx:value="empty-card" />
+               </styleClass>
+            </Rectangle>
+            <Rectangle fx:id="cardToDraw5" height="75" width="120">
+               <styleClass>
+                  <String fx:value="card" />
+                  <String fx:value="empty-card" />
+               </styleClass>
+            </Rectangle>
+            <Rectangle fx:id="deck" height="75" styleClass="card" width="120" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </right>
 </BorderPane>
