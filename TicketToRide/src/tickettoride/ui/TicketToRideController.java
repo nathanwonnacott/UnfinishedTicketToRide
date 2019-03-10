@@ -1,6 +1,8 @@
 package tickettoride.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -80,19 +82,20 @@ public class TicketToRideController {
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
 		mapCanvas.heightProperty().addListener((mapData) -> paintMap());
 		
-		File transportCardBackImageFile = new File("C:/Users/nate/git/TicketToRide/TicketToRide/resources/images/cardBack.jpg");
+		File transportCardBackImageFile = new File("images/cardBack.jpg");
 		Image transportCardBack = new Image(transportCardBackImageFile.toURI().toString());
 		deck.setFill(new ImagePattern(transportCardBack));
 	}
 	
 	@FXML
-	public void createNewGame() {
+	public void createNewGame() throws FileNotFoundException {
 		//TODO probably use a file chooser to load a file
 		//GameController gameController = null; //TODO new GameController();
 		//For now, we'll just manually build some stuff to test the map drawing
-		File backgroundImageFile = new File("C:/Users/nate/git/TicketToRide/TicketToRide/resources/maps/usaMap.jpg");
-
-		Image background = new Image(backgroundImageFile.toURI().toString());
+//		File backgroundImageFile = new File("C:/Users/nate/git/TicketToRide/TicketToRide/resources/maps/usaMap.jpg");
+//
+//		Image background = new Image(backgroundImageFile.toURI().toString());
+		Image background = ImageLoader.load("maps/usaMap.jpg");
 		
 		Destination d1 = new Destination("Awesomeville", 0.5, 0.5);
 		Destination d2 = new Destination("Paradise City", 0.6, 0.7);
