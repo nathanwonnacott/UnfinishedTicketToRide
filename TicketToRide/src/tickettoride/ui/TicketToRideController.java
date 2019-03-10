@@ -90,13 +90,90 @@ public class TicketToRideController {
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
 		mapCanvas.heightProperty().addListener((mapData) -> paintMap());
 		
-		Image transportCardBack;
+		setUpSidePanelCardBindings();
+	}
+	
+	private void setUpSidePanelCardBindings() {
+		
 		try {
-			transportCardBack = ImageLoader.load("images/cardBack.jpg");
+			Image transportCardBack = ImageLoader.load("images/cardBack.jpg");
 			deck.setFill(new ImagePattern(transportCardBack));
+			
+			Image wild = ImageLoader.load("images/wild.jpg");
+			Image black = ImageLoader.load("images/black.jpg");
+			Image blue = ImageLoader.load("images/blue.jpg");
+			Image green = ImageLoader.load("images/green.jpg");
+			Image orange = ImageLoader.load("images/orange.jpg");
+			Image purple = ImageLoader.load("images/purple.jpg");
+			Image red = ImageLoader.load("images/red.jpg");
+			Image white = ImageLoader.load("images/white.jpg");
+			Image yellow = ImageLoader.load("images/yellow.jpg");
+			
+			Rectangle[] drawCardRects = new Rectangle[] {
+					cardToDraw1,
+					cardToDraw2,
+					cardToDraw3,
+					cardToDraw4,
+					cardToDraw5}; 
+			
+			//TODO, it turns out that this isn't actually going to work when the cards change
+			//since the binding only hinges on when the game changes. This was just a flawed idea
+			//but at least it tests out how it displays for now.
+			for(int i = 0; i < 5; i++) {
+				final int finalI = i;
+				drawCardRects[i]
+						.fillProperty()
+						.bind(
+							Bindings.createObjectBinding(
+									() -> {
+										if(game.getValue() == null) {
+											return null;
+										}
+										if(game.getValue().drawCards().get(finalI).isNull().get()) {
+											return null;
+										}
+										Image img = null;
+										switch(game.getValue().drawCards().get(finalI).getValue()) {
+										case ANY:
+											img = wild;
+											break;
+										case BLACK:
+											img = black;
+											break;
+										case BLUE:
+											img = blue;
+											break;
+										case GREEN:
+											img = green;
+											break;
+										case ORANGE:
+											img = orange;
+											break;
+										case PURPLE:
+											img = purple;
+											break;
+										case RED:
+											img = red;
+											break;
+										case WHITE:
+											img = white;
+											break;
+										case YELLOW:
+											img = yellow;
+											break;
+										}
+										return new ImagePattern(img);
+									},
+									game
+									)
+								);
+				
+			}
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	@FXML
