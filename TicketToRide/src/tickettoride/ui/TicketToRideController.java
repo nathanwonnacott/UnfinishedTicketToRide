@@ -82,9 +82,13 @@ public class TicketToRideController {
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
 		mapCanvas.heightProperty().addListener((mapData) -> paintMap());
 		
-		File transportCardBackImageFile = new File("images/cardBack.jpg");
-		Image transportCardBack = new Image(transportCardBackImageFile.toURI().toString());
-		deck.setFill(new ImagePattern(transportCardBack));
+		Image transportCardBack;
+		try {
+			transportCardBack = ImageLoader.load("images/cardBack.jpg");
+			deck.setFill(new ImagePattern(transportCardBack));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
