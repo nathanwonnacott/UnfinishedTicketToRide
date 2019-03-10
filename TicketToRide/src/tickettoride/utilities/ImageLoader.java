@@ -1,7 +1,10 @@
-package tickettoride.ui;
+package tickettoride.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import javafx.scene.image.Image;
 
 public class ImageLoader {

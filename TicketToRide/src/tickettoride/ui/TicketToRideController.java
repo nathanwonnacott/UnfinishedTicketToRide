@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -26,15 +28,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import tickettoride.mapdata.MapData;
-import tickettoride.mapdata.MapData.Connection;
-import tickettoride.mapdata.MapData.Destination;
+import tickettoride.model.GameState;
+import tickettoride.model.MapData;
+import tickettoride.model.MapData.Connection;
+import tickettoride.model.MapData.Destination;
+import tickettoride.utilities.ImageLoader;
 
 public class TicketToRideController {
 
 	private final double destinationCircleDiameter = 20;
 	
-	private Property<MapData> mapData = new SimpleObjectProperty<>();
+	private Property<GameState> game = new SimpleObjectProperty<>();
+	private ObjectBinding<MapData> mapData = 
+			Bindings.createObjectBinding(
+					() -> game.getValue() == null ? null : game.getValue().getMap(),
+					game);
 	
 	@FXML
 	protected ScrollPane mapPane;
@@ -78,7 +86,7 @@ public class TicketToRideController {
 		mapAnchorPane.getMapProperty().bind(mapData);
 		mapAnchorPane.setBackgroundCanvas(mapCanvas);
 		
-		mapData.addListener((mapData) -> paintMap());
+		game.addListener((mapData) -> paintMap());
 		mapCanvas.widthProperty().addListener((mapData) -> paintMap());
 		mapCanvas.heightProperty().addListener((mapData) -> paintMap());
 		
@@ -106,7 +114,7 @@ public class TicketToRideController {
 		Destination d3 = new Destination("SuperdyDuperBurgh", 0.2, 0.8);
 		Destination d4 = new Destination("Justokayville", 0.3, 0.4);
 				
-		mapData.setValue(new MapData() {
+		MapData hardCodedMapData = new MapData() {
 
 			@Override
 			public Collection<Destination> getDestinations() {
@@ -134,10 +142,9 @@ public class TicketToRideController {
 						new Connection(d4, d1, CardColor.GREEN, 3));
 			}
 			
-		});
+		};
 		
-		
-		
+		game.setValue(new GameState(hardCodedMapData));
 		
 //		Circle circle = new Circle();
 //		circle.centerXProperty().bind(mapCanvas.widthProperty().divide(2.0));
@@ -148,19 +155,10 @@ public class TicketToRideController {
 	}
 	
 	private void paintMap() {
-		
+
 		GraphicsContext gc = mapCanvas.getGraphicsContext2D();
 		
 		gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
-		
-		//Just for debug purposes
-//		gc.setFill(Color.GREY);
-//		for(int i = 0; i <= mapCanvas.getWidth(); i += 20) {
-//			gc.strokeLine(i, 0, i, mapCanvas.getHeight());
-//		}
-//		for(int i = 0; i <= mapCanvas.getHeight(); i += 20) {
-//			gc.strokeLine(0, i, mapCanvas.getWidth(), i);
-//		}
 		
 		if(mapData.getValue() != null) {
 			MapData map = mapData.getValue();

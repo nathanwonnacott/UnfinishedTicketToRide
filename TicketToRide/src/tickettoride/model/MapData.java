@@ -1,4 +1,4 @@
-package tickettoride.mapdata;
+package tickettoride.model;
 
 import java.util.Collection;
 import java.util.Collections;

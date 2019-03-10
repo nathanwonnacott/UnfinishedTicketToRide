@@ -2,7 +2,7 @@ package tickettoride;
 
 import java.util.Set;
 
-import tickettoride.mapdata.MapData;
+import tickettoride.model.MapData;
 
 /**
  * This is the class that handles the main game flow

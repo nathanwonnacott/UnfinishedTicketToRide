@@ -32,10 +32,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import tickettoride.mapdata.MapData;
-import tickettoride.mapdata.MapData.CardColor;
-import tickettoride.mapdata.MapData.Connection;
-import tickettoride.mapdata.MapData.Destination;
+import tickettoride.model.MapData;
+import tickettoride.model.MapData.CardColor;
+import tickettoride.model.MapData.Connection;
+import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.MappedBinding;
 
 public class MapPane extends AnchorPane {

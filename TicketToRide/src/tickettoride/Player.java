@@ -1,6 +1,6 @@
 package tickettoride;
 
-import tickettoride.mapdata.MapData;
+import tickettoride.model.MapData;
 
 public interface Player {
 
