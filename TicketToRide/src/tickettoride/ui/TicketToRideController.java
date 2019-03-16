@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import tickettoride.model.GameDefinition;
 import tickettoride.model.GameState;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
@@ -144,59 +145,6 @@ public class TicketToRideController {
 				}
 			});
 			
-			//TODO, it turns out that this isn't actually going to work when the cards change
-			//since the binding only hinges on when the game changes. This was just a flawed idea
-			//but at least it tests out how it displays for now.
-//			for(int i = 0; i < 5; i++) {
-//				final int finalI = i;
-//				drawCardRects[i]
-//						.fillProperty()
-//						.bind(
-//							Bindings.createObjectBinding(
-//									() -> {
-//										if(game.getValue() == null) {
-//											return null;
-//										}
-//										if(game.getValue().getFaceUpTransportationCardProperties().get(finalI).isNull().get()) {
-//											return null;
-//										}
-//										Image img = null;
-//										switch(game.getValue().getFaceUpTransportationCardProperties().get(finalI).getValue()) {
-//										case ANY:
-//											img = wild;
-//											break;
-//										case BLACK:
-//											img = black;
-//											break;
-//										case BLUE:
-//											img = blue;
-//											break;
-//										case GREEN:
-//											img = green;
-//											break;
-//										case ORANGE:
-//											img = orange;
-//											break;
-//										case PURPLE:
-//											img = purple;
-//											break;
-//										case RED:
-//											img = red;
-//											break;
-//										case WHITE:
-//											img = white;
-//											break;
-//										case YELLOW:
-//											img = yellow;
-//											break;
-//										}
-//										return new ImagePattern(img);
-//									},
-//									game
-//									)
-//								);
-//				
-//			}
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -209,10 +157,6 @@ public class TicketToRideController {
 		//TODO probably use a file chooser to load a file
 		//GameController gameController = null; //TODO new GameController();
 		//For now, we'll just manually build some stuff to test the map drawing
-//		File backgroundImageFile = new File("C:/Users/nate/git/TicketToRide/TicketToRide/resources/maps/usaMap.jpg");
-//
-//		Image background = new Image(backgroundImageFile.toURI().toString());
-		Image background = ImageLoader.load("maps/usaMap.jpg");
 		
 		Destination d1 = new Destination("Awesomeville", 0.5, 0.5);
 		Destination d2 = new Destination("Paradise City", 0.6, 0.7);
@@ -224,11 +168,6 @@ public class TicketToRideController {
 			@Override
 			public Collection<Destination> getDestinations() {
 				return Arrays.asList(d1, d2, d3, d4);
-			}
-
-			@Override
-			public Image getBackgroundImage() {
-				return background;
 			}
 
 			@Override
@@ -248,8 +187,9 @@ public class TicketToRideController {
 			}
 			
 		};
+		GameDefinition hardCodedGame = new GameDefinition(new File("maps/usaMap.jpg"), hardCodedMapData, 24);
 		
-		game.setValue(new GameState(hardCodedMapData));
+		game.setValue(new GameState(hardCodedGame));
 		
 //		Circle circle = new Circle();
 //		circle.centerXProperty().bind(mapCanvas.widthProperty().divide(2.0));
@@ -265,39 +205,9 @@ public class TicketToRideController {
 		
 		gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 		
-		if(mapData.getValue() != null) {
-			MapData map = mapData.getValue();
-
-			gc.drawImage(map.getBackgroundImage(), 0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
-		
-			
-
-//			Map<Destination, Point> destinationPoints = new HashMap<>();
-//			
-//			//Draw cities
-//			for(Destination dest : map.getDestinations()) {
-//				gc.setFill(Color.BLACK);
-//				
-//				double x = dest.getXFraction() * mapCanvas.getWidth();
-//				double y = dest.getYFraction() * mapCanvas.getHeight();
-//				
-//				destinationPoints.put(dest, new Point(x,y));
-//
-//				x -= destinationCircleDiameter/2;
-//				y -= destinationCircleDiameter/2;
-//				
-//				gc.strokeOval(x, y, destinationCircleDiameter, destinationCircleDiameter);
-//				
-//				gc.strokeText(dest.getName(), x + destinationCircleDiameter, y);
-//			}
-//			
-//			//Draw connections
-//			for(Connection conn : map.getConnections()) {
-//				Point start = destinationPoints.get(conn.getStart());
-//				Point end = destinationPoints.get(conn.getEnd());
-//				
-//				gc.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
-//			}
+		if(game.getValue() != null && game.getValue().getBackgroundImage() != null) {
+			gc.drawImage(game.getValue().getBackgroundImage(), 
+							0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 		}
 	}
 	

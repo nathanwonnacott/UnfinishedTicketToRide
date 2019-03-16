@@ -23,7 +23,6 @@ public interface MapData {
 	
 	public Collection<Destination> getDestinations();
 	
-	public Image getBackgroundImage();
 	
 	public static class Destination {
 		private final String name;
