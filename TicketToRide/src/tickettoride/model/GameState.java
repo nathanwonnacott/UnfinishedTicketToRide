@@ -22,8 +22,8 @@ public class GameState {
 		return map;
 	}
 	
-	public List<ObjectProperty<CardColor>> drawCards() {
-		//TODO
+	public List<ObjectProperty<CardColor>> getFaceUpTransportationCardProperties() {
+		//TODO replace with properties representing each face up transportation card
 		return Arrays.asList(new SimpleObjectProperty<>(),
 				new SimpleObjectProperty<>(CardColor.ANY),
 				new SimpleObjectProperty<>(CardColor.BLACK),

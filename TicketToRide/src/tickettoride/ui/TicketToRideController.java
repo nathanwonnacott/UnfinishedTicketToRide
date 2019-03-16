@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,6 +31,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import tickettoride.model.GameState;
 import tickettoride.model.MapData;
+import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Connection;
 import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.ImageLoader;
@@ -99,76 +101,102 @@ public class TicketToRideController {
 			Image transportCardBack = ImageLoader.load("images/cardBack.jpg");
 			deck.setFill(new ImagePattern(transportCardBack));
 			
-			Image wild = ImageLoader.load("images/wild.jpg");
-			Image black = ImageLoader.load("images/black.jpg");
-			Image blue = ImageLoader.load("images/blue.jpg");
-			Image green = ImageLoader.load("images/green.jpg");
-			Image orange = ImageLoader.load("images/orange.jpg");
-			Image purple = ImageLoader.load("images/purple.jpg");
-			Image red = ImageLoader.load("images/red.jpg");
-			Image white = ImageLoader.load("images/white.jpg");
-			Image yellow = ImageLoader.load("images/yellow.jpg");
+			Map<CardColor, Image> transportationCardImages = new HashMap<>();
+			transportationCardImages.put(CardColor.ANY, ImageLoader.load("images/wild.jpg"));
+			transportationCardImages.put(CardColor.BLACK, ImageLoader.load("images/black.jpg"));
+			transportationCardImages.put(CardColor.BLUE, ImageLoader.load("images/blue.jpg"));
+			transportationCardImages.put(CardColor.GREEN, ImageLoader.load("images/green.jpg"));
+			transportationCardImages.put(CardColor.ORANGE, ImageLoader.load("images/orange.jpg"));
+			transportationCardImages.put(CardColor.PURPLE, ImageLoader.load("images/purple.jpg"));
+			transportationCardImages.put(CardColor.RED, ImageLoader.load("images/red.jpg"));
+			transportationCardImages.put(CardColor.WHITE, ImageLoader.load("images/white.jpg"));
+			transportationCardImages.put(CardColor.YELLOW, ImageLoader.load("images/yellow.jpg"));
 			
-			Rectangle[] drawCardRects = new Rectangle[] {
+			List<Rectangle> drawCardRects = Arrays.asList(
 					cardToDraw1,
 					cardToDraw2,
 					cardToDraw3,
 					cardToDraw4,
-					cardToDraw5}; 
+					cardToDraw5);
+			
+			game.addListener((x) -> {
+				drawCardRects.forEach(r -> r.fillProperty().unbind());
+				if(game.getValue() != null) {
+					List<ObjectProperty<CardColor>> cardProperties = game.getValue().getFaceUpTransportationCardProperties();
+					for(int i =0; i < drawCardRects.size(); i++) {
+						final ObjectProperty<CardColor> colorProperty = cardProperties.get(i);
+						drawCardRects.get(i)
+							.fillProperty()
+							.bind(Bindings.createObjectBinding(
+									() -> {
+										CardColor color = colorProperty.getValue();
+										if(color == null) {
+											return null;
+										}
+										else {
+											return new ImagePattern(transportationCardImages.get(color));
+										}
+									},
+									colorProperty
+									)
+									);
+					}
+				}
+			});
 			
 			//TODO, it turns out that this isn't actually going to work when the cards change
 			//since the binding only hinges on when the game changes. This was just a flawed idea
 			//but at least it tests out how it displays for now.
-			for(int i = 0; i < 5; i++) {
-				final int finalI = i;
-				drawCardRects[i]
-						.fillProperty()
-						.bind(
-							Bindings.createObjectBinding(
-									() -> {
-										if(game.getValue() == null) {
-											return null;
-										}
-										if(game.getValue().drawCards().get(finalI).isNull().get()) {
-											return null;
-										}
-										Image img = null;
-										switch(game.getValue().drawCards().get(finalI).getValue()) {
-										case ANY:
-											img = wild;
-											break;
-										case BLACK:
-											img = black;
-											break;
-										case BLUE:
-											img = blue;
-											break;
-										case GREEN:
-											img = green;
-											break;
-										case ORANGE:
-											img = orange;
-											break;
-										case PURPLE:
-											img = purple;
-											break;
-										case RED:
-											img = red;
-											break;
-										case WHITE:
-											img = white;
-											break;
-										case YELLOW:
-											img = yellow;
-											break;
-										}
-										return new ImagePattern(img);
-									},
-									game
-									)
-								);
-				
-			}
+//			for(int i = 0; i < 5; i++) {
+//				final int finalI = i;
+//				drawCardRects[i]
+//						.fillProperty()
+//						.bind(
+//							Bindings.createObjectBinding(
+//									() -> {
+//										if(game.getValue() == null) {
+//											return null;
+//										}
+//										if(game.getValue().getFaceUpTransportationCardProperties().get(finalI).isNull().get()) {
+//											return null;
+//										}
+//										Image img = null;
+//										switch(game.getValue().getFaceUpTransportationCardProperties().get(finalI).getValue()) {
+//										case ANY:
+//											img = wild;
+//											break;
+//										case BLACK:
+//											img = black;
+//											break;
+//										case BLUE:
+//											img = blue;
+//											break;
+//										case GREEN:
+//											img = green;
+//											break;
+//										case ORANGE:
+//											img = orange;
+//											break;
+//										case PURPLE:
+//											img = purple;
+//											break;
+//										case RED:
+//											img = red;
+//											break;
+//										case WHITE:
+//											img = white;
+//											break;
+//										case YELLOW:
+//											img = yellow;
+//											break;
+//										}
+//										return new ImagePattern(img);
+//									},
+//									game
+//									)
+//								);
+//				
+//			}
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
