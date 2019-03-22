@@ -2,10 +2,8 @@ package tickettoride.ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -24,23 +21,17 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import tickettoride.model.GameDefinition;
 import tickettoride.model.GameState;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
-import tickettoride.model.MapData.Connection;
 import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.ImageLoader;
 
 public class TicketToRideController {
 
-	private final double destinationCircleDiameter = 20;
-	
 	private Property<GameState> game = new SimpleObjectProperty<>();
 	private ObjectBinding<MapData> mapData = 
 			Bindings.createObjectBinding(
@@ -152,12 +143,19 @@ public class TicketToRideController {
 		
 	}
 	
+	/**
+	 * Method to be called by the File->New Game option. Should prompt the user for a json
+	 * game definition file, load it, and then set the {@link #game} property.
+	 * @throws FileNotFoundException
+	 */
 	@FXML
 	public void createNewGame() throws FileNotFoundException {
-		//TODO probably use a file chooser to load a file
-		//GameController gameController = null; //TODO new GameController();
-		//For now, we'll just manually build some stuff to test the map drawing
+		//TODO Allow the user to select a game definition file to load, then load the
+		//file.
 		
+		//For now, we'll just manually build a simple game definition so that we
+		//can test out the drawing code. Replace this hard coded definition with
+		//one loaded from the specified file.
 		Destination d1 = new Destination("Awesomeville", 0.5, 0.5);
 		Destination d2 = new Destination("Paradise City", 0.6, 0.7);
 		Destination d3 = new Destination("SuperdyDuperBurgh", 0.2, 0.8);
@@ -187,16 +185,13 @@ public class TicketToRideController {
 			}
 			
 		};
-		GameDefinition hardCodedGame = new GameDefinition(new File("maps/usaMap.jpg"), hardCodedMapData, 24);
+		GameDefinition hardCodedGameDefinition = new GameDefinition(new File("maps/usaMap.jpg"), 
+																	hardCodedMapData, 24);
 		
-		game.setValue(new GameState(hardCodedGame));
+		//Once your game definition is created, set the game property to a new GameState value initialized
+		//with the newly loaded game definition. This will cause the map to be drawn
+		game.setValue(new GameState(hardCodedGameDefinition));
 		
-//		Circle circle = new Circle();
-//		circle.centerXProperty().bind(mapCanvas.widthProperty().divide(2.0));
-//		circle.centerYProperty().bind(mapCanvas.heightProperty().divide(2.0));
-//		circle.setRadius(destinationCircleDiameter);
-//		
-//		mapAnchorPane.getChildren().add(circle);
 	}
 	
 	private void paintMap() {
@@ -209,18 +204,5 @@ public class TicketToRideController {
 			gc.drawImage(game.getValue().getBackgroundImage(), 
 							0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 		}
-	}
-	
-	private class Point {
-		private final double x;
-		private final double y;
-		
-		public Point(double x, double y) {
-			this.x = x;
-			this.y = y;
-		}
-		
-		public double getX() { return x;}
-		public double getY() { return y;}
 	}
 }
