@@ -1,6 +1,5 @@
 package tickettoride.ui;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,32 +7,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import tickettoride.model.MapData;
-import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Connection;
 import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.MappedBinding;
@@ -44,12 +35,12 @@ public class MapPane extends AnchorPane {
 	
 	private Canvas backgroundCanvas;
 
-	private final double DEST_RADIUS = 10.0;
+	private final double DEST_RADIUS = 5.0;
 
-	private final double HIGHLIGHTED_DEST_RADIUS = 12.0;
+	private final double HIGHLIGHTED_DEST_RADIUS = 7.0;
 	
-	private final double DEST_CENTER_TO_CONNECTION_START = 15.0;
-	private final double PATH_SEGMENT_BUFFER = 15.0;
+	private final double DEST_CENTER_TO_CONNECTION_START = 8.0;
+	private final double PATH_SEGMENT_BUFFER = 5.0;
 	
 	public MapPane() {
 		mapDataProperty.addListener((m) -> setupMap());

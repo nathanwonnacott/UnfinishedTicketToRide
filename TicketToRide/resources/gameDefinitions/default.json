@@ -1,0 +1,795 @@
+{
+	"backgroundImage" : "../maps/usaMap.jpg",
+	
+	"map" : {
+		"destinations" : [
+			{
+				"name" : "Los Angeles",
+				"xFraction" : 0.1096,
+				"yFraction" : 0.5644
+			},
+			{
+				"name" : "San Francisco",
+				"xFraction" : 0.05625,
+				"yFraction" : 0.41899
+			},
+			{
+				"name" : "Portland",
+				"xFraction" : 0.10125,
+				"yFraction" : 0.1756
+			},
+			{
+				"name" : "Seattle",
+				"xFraction" : 0.1208,
+				"yFraction" : 0.1139
+			},
+			{
+				"name" : "Vancouver",
+				"xFraction" : 0.1179,
+				"yFraction" : 0.05637
+			},
+			{
+				"name" : "Las Vegas",
+				"xFraction" : 0.1758,
+				"yFraction" : 0.51276
+			},
+			{
+				"name" : "Salt Lake City",
+				"xFraction" : 0.25083,
+				"yFraction" : 0.38279
+			},
+			{
+				"name" : "Calgary",
+				"xFraction" : 0.2583,
+				"yFraction" : 0.047478
+			},
+			{
+				"name" : "Helena",
+				"xFraction" : 0.27125,
+				"yFraction" : 0.19525
+			},
+			{
+				"name" : "Pheonix",
+				"xFraction" : 0.22083,
+				"yFraction" : 0.6142
+			},
+			{
+				"name" : "Denver",
+				"xFraction" : 0.3654,
+				"yFraction" : 0.477389
+			},
+			{
+				"name" : "Santa Fe",
+				"xFraction" : 0.339167,
+				"yFraction" : 0.567952
+			},
+			{
+				"name" : "El Paso",
+				"xFraction" : 0.32125,
+				"yFraction" : 0.69021
+			},
+			{
+				"name" : "Winnipeg",
+				"xFraction" : 0.50375,
+				"yFraction" : 0.119287
+			},
+			{
+				"name" : "Duluth",
+				"xFraction" : 0.58167,
+				"yFraction" : 0.21721
+			},
+			{
+				"name" : "Omaha",
+				"xFraction" : 0.52208,
+				"yFraction" : 0.396439
+			},
+			{
+				"name" : "Kansas City",
+				"xFraction" : 0.5433,
+				"yFraction" : 0.4676
+			},
+			{
+				"name" : "Oklahoma City",
+				"xFraction" : 0.49291667,
+				"yFraction" : 0.595899
+			},
+			{
+				"name" : "Dallas",
+				"xFraction" : 0.505833,
+				"yFraction" : 0.672997
+			},
+			{
+				"name" : "Houston",
+				"xFraction" : 0.53375,
+				"yFraction" : 0.7709
+			},
+			{
+				"name" : "Sault St. Marie",
+				"xFraction" : 0.70333,
+				"yFraction" : 0.211869
+			},
+			{
+				"name" : "Chicago",
+				"xFraction" : 0.6608,
+				"yFraction" : 0.3697
+			},
+			{
+				"name" : "Saint Louis",
+				"xFraction" : 0.6225,
+				"yFraction" : 0.4789
+			},
+			{
+				"name" : "Little Rock",
+				"xFraction" : 0.5896,
+				"yFraction" : 0.6095
+			},
+			{
+				"name" : "New Orleans",
+				"xFraction" : 0.6375,
+				"yFraction" : 0.7585
+			},
+			{
+				"name" : "Nashville",
+				"xFraction" : 0.6879,
+				"yFraction" : 0.5525
+			},
+			{
+				"name" : "Toronto",
+				"xFraction" : 0.7908,
+				"yFraction" : 0.254
+			},
+			{
+				"name" : "Pittsburgh",
+				"xFraction" : 0.79375,
+				"yFraction" : 0.3923
+			},
+			{
+				"name" : "Raleigh",
+				"xFraction" : 0.835,
+				"yFraction" : 0.5353
+			},
+			{
+				"name" : "Atlanta",
+				"xFraction" : 0.7375,
+				"yFraction" : 0.6237
+			},
+			{
+				"name" : "Montreal",
+				"xFraction" : 0.8742,
+				"yFraction" : 0.1994
+			},
+			{
+				"name" : "Boston",
+				"xFraction" : 0.93125,
+				"yFraction" : 0.2849
+			},
+			{
+				"name" : "New York",
+				"xFraction" : 0.8933,
+				"yFraction" : 0.3537
+			},
+			{
+				"name" : "Washington",
+				"xFraction" : 0.85125,
+				"yFraction" : 0.4285
+			},
+			{
+				"name" : "Charleston",
+				"xFraction" : 0.8241,
+				"yFraction" : 0.6368
+			},
+			{
+				"name" : "Miami",
+				"xFraction" : 0.84625,
+				"yFraction" : 0.8593
+			}
+		],
+		
+		"connections" : [
+			{
+				"start" : "Los Angeles",
+				"end" : "San Francisco",
+				"numSegments" : 3,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Los Angeles",
+				"end" : "San Francisco",
+				"numSegments" : 3,
+				"color" : "purple"
+			},
+			{
+				"start" : "Los Angeles",
+				"end" : "Las Vegas",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Los Angeles",
+				"end" : "Pheonix",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Los Angeles",
+				"end" : "El Paso",
+				"numSegments" : 6,
+				"color" : "black"
+			},
+			{
+				"start" : "San Francisco",
+				"end" : "Salt Lake City",
+				"numSegments" : 5,
+				"color" : "white"
+			},
+			{
+				"start" : "San Francisco",
+				"end" : "Salt Lake City",
+				"numSegments" : 5,
+				"color" : "orange"
+			},
+			{
+				"start" : "San Francisco",
+				"end" : "Portland",
+				"numSegments" : 5,
+				"color" : "purple"
+			},
+			{
+				"start" : "San Francisco",
+				"end" : "Portland",
+				"numSegments" : 5,
+				"color" : "green"
+			},
+			{
+				"start" : "Las Vegas",
+				"end" : "Salt Lake City",
+				"numSegments" : 3,
+				"color" : "orange"
+			},
+			{
+				"start" : "Pheonix",
+				"end" : "Denver",
+				"numSegments" : 5,
+				"color" : "white"
+			},
+			{
+				"start" : "Pheonix",
+				"end" : "Santa Fe",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Pheonix",
+				"end" : "El Paso",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Santa Fe",
+				"end" : "El Paso",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "El Paso",
+				"numSegments" : 5,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Dallas",
+				"end" : "El Paso",
+				"numSegments" : 4,
+				"color" : "red"
+			},
+			{
+				"start" : "Houston",
+				"end" : "El Paso",
+				"numSegments" : 6,
+				"color" : "green"
+			},
+			{
+				"start" : "Portland",
+				"end" : "Seattle",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Portland",
+				"end" : "Seattle",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Portland",
+				"end" : "Salt Lake City",
+				"numSegments" : 6,
+				"color" : "blue"
+			},
+			{
+				"start" : "Helena",
+				"end" : "Salt Lake City",
+				"numSegments" : 3,
+				"color" : "purple"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Salt Lake City",
+				"numSegments" : 3,
+				"color" : "red"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Salt Lake City",
+				"numSegments" : 3,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Helena",
+				"numSegments" : 3,
+				"color" : "green"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Omaha",
+				"numSegments" : 4,
+				"color" : "purple"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Kansas City",
+				"numSegments" : 4,
+				"color" : "orange"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Kansas City",
+				"numSegments" : 4,
+				"color" : "black"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Oklahoma City",
+				"numSegments" : 4,
+				"color" : "red"
+			},
+			{
+				"start" : "Denver",
+				"end" : "Santa Fe",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Santa Fe",
+				"numSegments" : 3,
+				"color" : "blue"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Kansas City",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Kansas City",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Little Rock",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Dallas",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Oklahoma City",
+				"end" : "Dallas",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Little Rock",
+				"end" : "Dallas",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Houston",
+				"end" : "Dallas",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Houston",
+				"end" : "Dallas",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Houston",
+				"end" : "New Orleans",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Seattle",
+				"end" : "Vancouver",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Seattle",
+				"end" : "Vancouver",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Seattle",
+				"end" : "Calgary",
+				"numSegments" : 4,
+				"color" : "any"
+			},
+			{
+				"start" : "Seattle",
+				"end" : "Helena",
+				"numSegments" : 6,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Calgary",
+				"end" : "Helena",
+				"numSegments" : 4,
+				"color" : "any"
+			},
+			{
+				"start" : "Winnipeg",
+				"end" : "Helena",
+				"numSegments" : 4,
+				"color" : "blue"
+			},
+			{
+				"start" : "Duluth",
+				"end" : "Helena",
+				"numSegments" : 6,
+				"color" : "orange"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Helena",
+				"numSegments" : 5,
+				"color" : "red"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Duluth",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Duluth",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Vancouver",
+				"end" : "Calgary",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Winnipeg",
+				"end" : "Calgary",
+				"numSegments" : 6,
+				"color" : "white"
+			},
+			{
+				"start" : "Winnipeg",
+				"end" : "Duluth",
+				"numSegments" : 4,
+				"color" : "black"
+			},
+			{
+				"start" : "Winnipeg",
+				"end" : "Sault St. Marie",
+				"numSegments" : 6,
+				"color" : "any"
+			},
+			{
+				"start" : "Duluth",
+				"end" : "Sault St. Marie",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Duluth",
+				"end" : "Toronto",
+				"numSegments" : 6,
+				"color" : "purple"
+			},
+			{
+				"start" : "Duluth",
+				"end" : "Chicago",
+				"numSegments" : 3,
+				"color" : "red"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Chicago",
+				"numSegments" : 4,
+				"color" : "blue"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Kansas City",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Omaha",
+				"end" : "Kansas City",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Saint Louis",
+				"end" : "Kansas City",
+				"numSegments" : 2,
+				"color" : "blue"
+			},
+			{
+				"start" : "Saint Louis",
+				"end" : "Kansas City",
+				"numSegments" : 2,
+				"color" : "purple"
+			},
+			{
+				"start" : "Saint Louis",
+				"end" : "Little Rock",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Nashville",
+				"end" : "Little Rock",
+				"numSegments" : 3,
+				"color" : "white"
+			},
+			{
+				"start" : "New Orleans",
+				"end" : "Little Rock",
+				"numSegments" : 3,
+				"color" : "green"
+			},
+			{
+				"start" : "New Orleans",
+				"end" : "Atlanta",
+				"numSegments" : 4,
+				"color" : "yellow"
+			},
+			{
+				"start" : "New Orleans",
+				"end" : "Atlanta",
+				"numSegments" : 4,
+				"color" : "orange"
+			},
+			{
+				"start" : "New Orleans",
+				"end" : "Miami",
+				"numSegments" : 6,
+				"color" : "red"
+			},
+			{
+				"start" : "Sault St. Marie",
+				"end" : "Montreal",
+				"numSegments" : 5,
+				"color" : "black"
+			},
+			{
+				"start" : "Sault St. Marie",
+				"end" : "Toronto",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Montreal",
+				"end" : "Toronto",
+				"numSegments" : 3,
+				"color" : "any"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "Toronto",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Chicago",
+				"end" : "Toronto",
+				"numSegments" : 4,
+				"color" : "white"
+			},
+			{
+				"start" : "Chicago",
+				"end" : "Pittsburgh",
+				"numSegments" : 3,
+				"color" : "orange"
+			},
+			{
+				"start" : "Chicago",
+				"end" : "Pittsburgh",
+				"numSegments" : 3,
+				"color" : "black"
+			},
+			{
+				"start" : "Chicago",
+				"end" : "Saint Louis",
+				"numSegments" : 2,
+				"color" : "green"
+			},
+			{
+				"start" : "Chicago",
+				"end" : "Saint Louis",
+				"numSegments" : 2,
+				"color" : "white"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "Saint Louis",
+				"numSegments" : 5,
+				"color" : "green"
+			},
+			{
+				"start" : "Nashville",
+				"end" : "Saint Louis",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Nashville",
+				"end" : "Pittsburgh",
+				"numSegments" : 4,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Nashville",
+				"end" : "Raleigh",
+				"numSegments" : 3,
+				"color" : "black"
+			},
+			{
+				"start" : "Nashville",
+				"end" : "Atlanta",
+				"numSegments" : 1,
+				"color" : "any"
+			},
+			{
+				"start" : "Atlanta",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Atlanta",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Atlanta",
+				"end" : "Charleston",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Atlanta",
+				"end" : "Miami",
+				"numSegments" : 5,
+				"color" : "blue"
+			},
+			{
+				"start" : "Charleston",
+				"end" : "Miami",
+				"numSegments" : 4,
+				"color" : "purple"
+			},
+			{
+				"start" : "Montreal",
+				"end" : "Boston",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Montreal",
+				"end" : "Boston",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Montreal",
+				"end" : "New York",
+				"numSegments" : 3,
+				"color" : "blue"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "white"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "green"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "Washington",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Pittsburgh",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Washington",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Washington",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Charleston",
+				"end" : "Raleigh",
+				"numSegments" : 2,
+				"color" : "any"
+			},
+			{
+				"start" : "Boston",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "yellow"
+			},
+			{
+				"start" : "Boston",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "red"
+			},
+			{
+				"start" : "Washington",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "orange"
+			},
+			{
+				"start" : "Washington",
+				"end" : "New York",
+				"numSegments" : 2,
+				"color" : "black"
+			}
+		]
+	},
+	
+	"gameRules" : {
+		"numTrainsPerPlayer" : 24
+	}
+}
