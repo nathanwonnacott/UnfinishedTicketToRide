@@ -32,7 +32,7 @@
       </MenuBar>
    </top>
    <center>
-      <ScrollPane fx:id="mapPane" fitToHeight="true" fitToWidth="true" minViewportHeight="10.0" minViewportWidth="10.0" prefHeight="10.0" prefViewportHeight="10.0" prefViewportWidth="10.0" prefWidth="10.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="mapScrollPane" fitToHeight="true" fitToWidth="true" minViewportHeight="10.0" minViewportWidth="10.0" prefHeight="10.0" prefViewportHeight="10.0" prefViewportWidth="10.0" prefWidth="10.0" BorderPane.alignment="CENTER">
         <content>
           <MapPane fx:id="mapAnchorPane">
                <children>

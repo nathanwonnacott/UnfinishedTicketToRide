@@ -29,6 +29,19 @@ import tickettoride.model.MapData.Connection;
 import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.MappedBinding;
 
+/**
+ * This is the graphical component that contains the ticket to ride map. It handles all of the process
+ * of drawing the destinations and connections between them. It is not finished yet.
+ * </br></br>
+ * I don't recommend that students modify this at this point (and perhaps they should not ever modify it) because
+ * it is certainly going to undergo some major changes in the future and it will lead to nasty merges if students
+ * make their own changes.
+ * </br></br>
+ * I appologize for the overall lack of comments in this class. A lot of this code was pretty experimental and hacky
+ * so I didn't bother commenting it. The final version should be much better documented.
+ * @author nate
+ *
+ */
 public class MapPane extends AnchorPane {
 
 	private Property<MapData> mapDataProperty = new SimpleObjectProperty<>();

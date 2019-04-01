@@ -2,11 +2,13 @@ package tickettoride.utilities;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import javafx.scene.image.Image;
 
+/**
+ * Provides some static utility methods for loading image resources
+ * @author nate
+ *
+ */
 public class ImageLoader {
 
 	/**

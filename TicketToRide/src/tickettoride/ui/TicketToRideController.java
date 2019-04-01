@@ -30,47 +30,88 @@ import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Destination;
 import tickettoride.utilities.ImageLoader;
 
+/**
+ * The FXML controller class that handles all actions from the GUI and sets up various bindings.
+ * This is basically the middle man between the user interface and the game logic.
+ * </br></br>
+ * Students will have to modify some parts of this file, but they should use caution to only modify what they
+ * need to because Nate will likely be making some modifications too and merges could get nasty if too much changes
+ * @author nate
+ *
+ */
 public class TicketToRideController {
 
+	/** Property containing the current {@link GameState} */
 	private Property<GameState> game = new SimpleObjectProperty<>();
+	
+	/** Binding that results in the current {@link MapData} */
 	private ObjectBinding<MapData> mapData = 
 			Bindings.createObjectBinding(
 					() -> game.getValue() == null ? null : game.getValue().getMap(),
 					game);
 	
+	/**
+	 * Scrolling pane that contains the map
+	 */
 	@FXML
-	protected ScrollPane mapPane;
+	protected ScrollPane mapScrollPane;
 	
+	/**
+	 * Pane containing the map (this is the content within the {@link #mapScrollPane}
+	 */
 	@FXML
 	protected MapPane mapAnchorPane;
+	
+	/**
+	 * Canvas object used to display background image
+	 */
 	@FXML
 	protected Canvas mapCanvas;
 	
+	/**
+	 * Background image to be displayed (path specified by the game definition file)
+	 */
 	@FXML
 	protected ImageView backgroundImage;
 	
+	/**  Graphical element representing the 1st face up transportation card */
 	@FXML
 	protected Rectangle cardToDraw1;
+	/**  Graphical element representing the 2nd face up transportation card */
 	@FXML
 	protected Rectangle cardToDraw2;
+	/**  Graphical element representing the 3rd face up transportation card */
 	@FXML
 	protected Rectangle cardToDraw3;
+	/**  Graphical element representing the 4th face up transportation card */
 	@FXML
 	protected Rectangle cardToDraw4;
+	/**  Graphical element representing the 5th face up transportation card */
 	@FXML
 	protected Rectangle cardToDraw5;
+	/** Graphical element representing the deck of transportation cards */
 	@FXML
 	protected Rectangle deck;
 	
+	/** Minimum width that the map should be sized to before using the scroll bars (this will probably change) */
 	private final double MIN_MAP_WIDTH = 400;
+	/** Minimum width that the map should be sized to before using the scroll bars (this will probably change) */	
 	private final double MIN_MAP_HEIGHT = 400;
+	
+	
+	/** This is a special method called by the FXML loader. It is used to set up various properties 
+	 * of the graphical components after all of the members with the "FXML" notation have been
+	 * populated.
+	 */
 	public void initialize() {
 		
-		mapPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		mapPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		//A lot of this is likely to change because I'm not 100% satisfied with my 
+		//resizing behavior. Basically all of this is to try to properly handle resizing
+		mapScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		mapScrollPane.setHbarPolicy(ScrollBarPolicy.ALWAYS);
 
-		mapCanvas.widthProperty().bind(Bindings.max(MIN_MAP_WIDTH, mapPane.widthProperty().subtract(15.0)));
-		mapCanvas.heightProperty().bind(Bindings.max(MIN_MAP_HEIGHT, mapPane.heightProperty().subtract(15.0)));
+		mapCanvas.widthProperty().bind(Bindings.max(MIN_MAP_WIDTH, mapScrollPane.widthProperty().subtract(15.0)));
+		mapCanvas.heightProperty().bind(Bindings.max(MIN_MAP_HEIGHT, mapScrollPane.heightProperty().subtract(15.0)));
 		
 		backgroundImage.fitWidthProperty().bind(mapCanvas.widthProperty());
 		backgroundImage.fitHeightProperty().bind(mapCanvas.heightProperty());
@@ -87,6 +128,11 @@ public class TicketToRideController {
 		setUpSidePanelCardBindings();
 	}
 	
+	/**
+	 * Method sets up bindings to ensure that the face up transportation cards on the side panel
+	 * always show the appropriate image based on the {@link #game game state's} current face up transportation
+	 * cards
+	 */
 	private void setUpSidePanelCardBindings() {
 		
 		try {
@@ -146,10 +192,13 @@ public class TicketToRideController {
 	/**
 	 * Method to be called by the File->New Game option. Should prompt the user for a json
 	 * game definition file, load it, and then set the {@link #game} property.
-	 * @throws FileNotFoundException
+	 * </br></br>
+	 * If there are any issues loading the file (such as the file not existing, or being
+	 * improperly formatted) it should show a meaningful error dialog indicating the cause
+	 * of the error.
 	 */
 	@FXML
-	public void createNewGame() throws FileNotFoundException {
+	public void createNewGame() {
 		//TODO Allow the user to select a game definition file to load, then load the
 		//file.
 		
@@ -194,8 +243,11 @@ public class TicketToRideController {
 		
 	}
 	
+	/**
+	 * Paints the background image. This method probably isn't actually necessary. I may take it out
+	 * later.
+	 */
 	private void paintMap() {
-
 		GraphicsContext gc = mapCanvas.getGraphicsContext2D();
 		
 		gc.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
