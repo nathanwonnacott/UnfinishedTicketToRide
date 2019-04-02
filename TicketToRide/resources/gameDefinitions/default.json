@@ -790,6 +790,172 @@
 	},
 	
 	"gameRules" : {
-		"numTrainsPerPlayer" : 24
+		"numTrainsPerPlayer" : 24,
+		"cardInfo" : {
+			"transportationCardCounts" : {
+				"any" : 14,
+				"white" : 12,
+				"black" : 12,
+				"red" : 12,
+				"orange" : 12,
+				"yellow" : 12,
+				"green" : 12,
+				"blue" : 12,
+				"purple" : 12
+			},
+			"destinationCards" : [
+				{
+					"start" : "Denver",
+					"end" : "El Paso",
+					"points" : 4
+				},
+				{
+					"start" : "Kansas City",
+					"end" : "Houston",
+					"points" : 5
+				},
+				{
+					"start" : "New York",
+					"end" : "Atlanta",
+					"points" : 6
+				},
+				{
+					"start" : "Chicago",
+					"end" : "New Orleans",
+					"points" : 7
+				},
+				{
+					"start" : "Calgary",
+					"end" : "Salt Lake City",
+					"points" : 7
+				},
+				{
+					"start" : "Helena",
+					"end" : "Los Angeles",
+					"points" : 8
+				},
+				{
+					"start" : "Duluth",
+					"end" : "Houston",
+					"points" : 8
+				},
+				{
+					"start" : "Sault St. Marie",
+					"end" : "Nashville",
+					"points" : 8
+				},
+				{
+					"start" : "Montreal",
+					"end" : "Atlanta",
+					"points" : 9
+				},
+				{
+					"start" : "Sault St. Marie",
+					"end" : "Oklahoma City",
+					"points" : 9
+				},
+				{
+					"start" : "Seattle",
+					"end" : "Los Angeles",
+					"points" : 9
+				},
+				{
+					"start" : "Chicago",
+					"end" : "Santa Fe",
+					"points" : 9
+				},
+				{
+					"start" : "Duluth",
+					"end" : "El Paso",
+					"points" : 10
+				},
+				{
+					"start" : "Toronto",
+					"end" : "Miami",
+					"points" : 10
+				},
+				{
+					"start" : "Portland",
+					"end" : "Pheonix",
+					"points" : 11
+				},
+				{
+					"start" : "Dallas",
+					"end" : "New York",
+					"points" : 11
+				},
+				{
+					"start" : "Denver",
+					"end" : "Pittsburgh",
+					"points" : 11
+				},
+				{
+					"start" : "Winnipeg",
+					"end" : "Little Rock",
+					"points" : 11
+				},
+				{
+					"start" : "Winnipeg",
+					"end" : "Houston",
+					"points" : 12
+				},
+				{
+					"start" : "Boston",
+					"end" : "Miami",
+					"points" : 12
+				},
+				{
+					"start" : "Vancouver",
+					"end" : "Santa Fe",
+					"points" : 13
+				},
+				{
+					"start" : "Calgary",
+					"end" : "Pheonix",
+					"points" : 13
+				},
+				{
+					"start" : "Montreal",
+					"end" : "New Orleans",
+					"points" : 13
+				},
+				{
+					"start" : "Los Angeles",
+					"end" : "Chicago",
+					"points" : 16
+				},
+				{
+					"start" : "San Francisco",
+					"end" : "Atlanta",
+					"points" : 17
+				},
+				{
+					"start" : "Portland",
+					"end" : "Nashville",
+					"points" : 17
+				},
+				{
+					"start" : "Vancouver",
+					"end" : "Montreal",
+					"points" : 20
+				},
+				{
+					"start" : "Los Angeles",
+					"end" : "Miami",
+					"points" : 20
+				},
+				{
+					"start" : "Los Angeles",
+					"end" : "New York",
+					"points" : 21
+				},
+				{
+					"start" : "Seattle",
+					"end" : "New York",
+					"points" : 22
+				}
+				
+			]
+		}
 	}
 }
