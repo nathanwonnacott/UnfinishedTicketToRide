@@ -1,6 +1,11 @@
 package tickettoride.model;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Set;
+
+import tickettoride.model.MapData.CardColor;
+import tickettoride.model.MapData.Destination;
 
 /**
  * Defines a Ticket to ride game (there are a variety of releases of ticket to 
@@ -61,4 +66,70 @@ public class GameDefinition {
 		return initialNumberOfTrainsPerPlayer;
 	}
 	
+	/**
+	 * Returns the number of transportation cards for the specified color
+	 * @param color color to check
+	 * @return the number of cards of that color for this game
+	 */
+	public int getNumberOfTransportationCards(CardColor color) {
+		//TODO should return a number from the game definition file.
+		//to be completed by student.
+		//Note that the student will also have to either modify the constructor or add a
+		//mutator to get this to work.
+		return 10;
+	}
+	
+	public Set<DestinationCard> getDestinationCards() {
+		//TODO should return all of the destination cards for the game. To
+		//be completed by the student.
+		//Note that the student will also have to either modify the constructor or add a
+		//mutator to get this to work.
+		return Collections.emptySet();
+	}
+	
+	public static class DestinationCard {
+		/**
+		 * The starting point that needs to be connected to {@link #end} in order
+		 * to earn the points. (Note that it doesn't matter which destination is
+		 * start and which one is end)
+		 */
+		private final Destination start;
+
+		/**
+		 * The ending point that needs to be connected to {@link #start} in order
+		 * to earn the points. (Note that it doesn't matter which destination is
+		 * start and which one is end)
+		 */
+		private final Destination end;
+		/**
+		 * The number of points that will be awarded for connecting {@link #start} and {@link #end}
+		 */
+		private final int numPoints;
+		
+		/**
+		 * @param start {@link #start}
+		 * @param end {@link #end}
+		 * @param numPoints {@link #numPoints}
+		 */
+		public DestinationCard(Destination start, Destination end, int numPoints) {
+			this.start = start;
+			this.end = end;
+			this.numPoints = numPoints;
+		}
+		
+		/** @return {@link #start} */
+		public Destination getStart() {
+			return start;
+		}
+
+		/** @return {@link #end} */
+		public Destination getEnd() {
+			return end;
+		}
+		
+		/** @return {@link #numPoints} */
+		public int getNumPoints() {
+			return numPoints;
+		}
+	}
 }
