@@ -80,6 +80,7 @@ public class MapPane extends AnchorPane {
 		this.getChildren().add(backgroundCanvas);
 		
 		Map<Destination, Circle> circles = new HashMap<>();
+		Set<Text> cityNames = new HashSet<>();
 		
 		//Setup destinations
 		for(Destination dest : mapData.getDestinations()) {
@@ -132,13 +133,7 @@ public class MapPane extends AnchorPane {
 			
 			
 			circles.put(dest, destCircle);
-
-			//Note that it's important that the name is added before the circle. Otherwise, when the
-			//mouse is on the right hand side of the circle, the text enlarging basically steals the mouse
-			//and makes a mouse exit event for the circle, which causes the highlighted state to fluctuate
-			//back and forth rapidly. By putting the dest circle on top, the circle has precedence.
-			this.getChildren().add(cityName);
-			this.getChildren().add(destCircle);
+			cityNames.add(cityName);
 		}
 		
 		//Setup connections
@@ -310,12 +305,19 @@ public class MapPane extends AnchorPane {
 				}
 				
 			}
-							
-			
-			
-			
 			
 		}
+		//Note that it's important that the name is added before the circle. Otherwise, when the
+		//mouse is on the right hand side of the circle, the text enlarging basically steals the mouse
+		//and makes a mouse exit event for the circle, which causes the highlighted state to fluctuate
+		//back and forth rapidly. By putting the dest circle on top, the circle has precedence.
+		//It's important that both are added after the rectangles just to make sure that they show
+		//up in the event that a rectangle and a label occupy the same space. Eventually, I'd like
+		//to make code to guarantee that there never is an overlap, but this way, if there is, it
+		//will still show up.
+		this.getChildren().addAll(cityNames);
+		this.getChildren().addAll(circles.values());
+		
 		
 	}
 	
