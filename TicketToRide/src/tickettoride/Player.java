@@ -16,12 +16,13 @@ import tickettoride.model.MapData;
  */
 public interface Player {
 
-	//TODO, document this once I'm sure how it should work
-	//This may change in the future.
+	/**
+	 * Performs a move on the specified map data using the mover object. This method should
+	 * block until the move is complete. In other words, after calling this method, a call to 
+	 * <pre>mover.getTurnCompletedBinding().get()</pre> should return false.
+	 * @param mapData
+	 * @param mover
+	 */
 	public void executeMove(MapData mapData, Mover mover);
 	
-	//TODO this obviously isn't done yet.
-	public interface Mover {
-		
-	}
 }
