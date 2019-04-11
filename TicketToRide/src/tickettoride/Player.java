@@ -1,6 +1,12 @@
 package tickettoride;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData;
+import tickettoride.model.MapData.CardColor;
 
 /**
  * Interface that all ticket to ride players must implement.
@@ -16,6 +22,30 @@ import tickettoride.model.MapData;
  */
 public interface Player {
 
+	/**
+	 * Sets a reference to a read-only version of the player's transportation cards hand. The map should be created 
+	 * via {@link Collections#unmodifiableMap} so that the player can't cheat by modifying the map other than
+	 * via a {@link Mover} object.
+	 * </br></br>
+	 * This method should be called during the initialization of the game with a reference to an empty map and then
+	 * that map should reflect the player's hand throughout the game.
+	 * @param unmodifiableTransportationCardsMap Unmodifiable view of this player's transportation card hand
+	 * where the key is the color of transportation card and the value is the number of that card that the
+	 * player has.
+	 */
+	public void setTransportationCardsMapView(Map<CardColor, Integer> unmodifiableTransportationCardsMap);
+	
+	/**
+	 * Sets a reference to a read-only version of the player's destination cards. The set should be created 
+	 * via {@link Collections#unmodifiableSet} so that the player can't cheat by changing its cards other than
+	 * via a {@link Mover} object.
+	 * </br></br>
+	 * This method should be called during the initialization of the game with a reference to an empty set and then
+	 * that set should reflect the player's destination cards throughout the game.
+	 * @param unmodifiableDestinationCards Unmodifiable view of this player's destination cards
+	 */
+	public void setDestinationCardsView(Set<DestinationCard> unmodifiableDestinationCards);
+	
 	/**
 	 * Performs a move on the specified map data using the mover object. This method should
 	 * block until the move is complete. In other words, after calling this method, a call to 
