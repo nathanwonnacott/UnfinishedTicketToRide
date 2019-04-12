@@ -91,6 +91,7 @@ public interface Mover {
 	 *  		<li>This is only a two player game</li>
 	 *  	</ul>
 	 *  </li>
+	 *  <li>The player does not have enough train pieces remaining to build the connection</li>
 	 *  <li>The specified connection does not actually exist in the map</li>
 	 *  <li>The player has already begun/completed another move this turn</li>
 	 * </ul>
