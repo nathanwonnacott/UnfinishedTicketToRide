@@ -233,6 +233,12 @@ public class TicketToRideController {
 						new Connection(d4, d1, CardColor.GREEN, 3));
 			}
 			
+			@Override
+			public MapData clone() {
+				return this;	//For simplicity here, we're not actually going to clone it. It won't matter
+								//for this case, but needs to be implemented in the real version.
+			}
+			
 		};
 		GameDefinition hardCodedGameDefinition = new GameDefinition(new File("maps/usaMap.jpg"), 
 																	hardCodedMapData, 24);

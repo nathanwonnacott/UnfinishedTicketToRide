@@ -9,7 +9,7 @@ import java.util.Collection;
  * Students should not modify this interface, but should create their own implementation of it.
  * @author nate
  */
-public interface MapData {
+public interface MapData extends Cloneable {
 	
 	/**
 	 * Enum that represents each of the transportation card colors and 
@@ -49,6 +49,11 @@ public interface MapData {
 	 */
 	public Collection<Connection> getConnectionsToOrFromDest(Destination dest);
 	
+	/**
+	 * Creates a deep copy of this map data
+	 * @return clone of the map data
+	 */
+	public MapData clone();
 	
 	/**
 	 * Class represents a single destination on the map. Students should not modify this

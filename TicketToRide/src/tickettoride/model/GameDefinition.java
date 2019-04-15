@@ -27,7 +27,7 @@ public class GameDefinition {
 	/**
 	 * {@link MapData} object containing the destination and connection information.
 	 */
-	private final MapData mapData;
+	private final MapData initialMapData;
 	/**
 	 * Number of train pieces that each player will start the game with
 	 */
@@ -36,12 +36,12 @@ public class GameDefinition {
 	/**
 	 * Initializes a game definition with the specified parameters
 	 * @param backgroundImage {@link #backgroundImage}
-	 * @param mapData {@link #mapData}
+	 * @param initialMapData {@link #initialMapData}
 	 * @param numTrains {@link #initialNumberOfTrainsPerPlayer}
 	 */
-	public GameDefinition(File backgroundImage, MapData mapData, int numTrains) {
+	public GameDefinition(File backgroundImage, MapData initialMapData, int numTrains) {
 		this.backgroundImage = backgroundImage;
-		this.mapData = mapData;
+		this.initialMapData = initialMapData;
 		this.initialNumberOfTrainsPerPlayer = numTrains;
 	}
 
@@ -53,10 +53,12 @@ public class GameDefinition {
 	}
 
 	/**
-	 * @return {@link #mapData}
+	 * @return a copy of the {@link #initialMapData}
 	 */
-	public MapData getMapData() {
-		return mapData;
+	public MapData getInitialMapData() {
+		//Return a clone instead of the original so that changes made throughout the
+		//game aren't reflected in the definition.
+		return initialMapData.clone();
 	}
 
 	/**

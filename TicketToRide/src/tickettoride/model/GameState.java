@@ -23,14 +23,14 @@ import tickettoride.utilities.ImageLoader;
  */
 public class GameState {
 
-	//TODO I'm not in love with using a member variable called "game definition" to represent mutable parts
-	//of the game state (such as which players own which connections and such).
 	private final GameDefinition gameDefinition;
+	private final MapData mapData;
 	private final Image background;
 	
 	
 	public GameState(GameDefinition gameDefinition) {
 		this.gameDefinition = gameDefinition;
+		mapData = this.gameDefinition.getInitialMapData();
 		
 		Image nonFinalBackgroundImage = null;
 		try {
@@ -43,7 +43,7 @@ public class GameState {
 	
 	
 	public MapData getMap() {
-		return gameDefinition.getMapData();
+		return mapData;
 	}
 	
 	public Image getBackgroundImage() {
