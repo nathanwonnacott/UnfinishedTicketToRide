@@ -2,6 +2,11 @@ package tickettoride.model;
 
 import java.util.Collection;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import tickettoride.players.Player;
+
 /**
  * This represents the board map including the destinations, connections between them, and
  * the state of which paths have been claimed by which players (that part isn't really included
@@ -158,6 +163,12 @@ public interface MapData extends Cloneable {
 		private final CardColor color;
 		
 		/**
+		 * Property indicating the player that has claimed this connection. If the value is
+		 * null, then the connection has not yet been claimed.
+		 */
+		private Property<Player> owner;
+		
+		/**
 		 * Constructs a Connection object between the specified destinations with the specified properties
 		 * @param start sets {@link #start}
 		 * @param end sets {@link #end}
@@ -169,6 +180,7 @@ public interface MapData extends Cloneable {
 			this.end = end;
 			this.numSegments = numSegments;
 			this.color = color;
+			this.owner = new SimpleObjectProperty<>();
 		}
 		
 		/** @return {@link #start} */
@@ -189,6 +201,21 @@ public interface MapData extends Cloneable {
 		/** @return {@link #numSegments} */
 		public int getNumSegments() {
 			return numSegments;
+		}
+		
+		/**
+		 * Sets the value of {@link #owner} to the specified player.
+		 * @param player The player who is claiming the property
+		 */
+		public void claim(Player player) {
+			this.owner.setValue(player);
+		}
+		
+		/**
+		 * @return {@link #owner} as a read-only property
+		 */
+		public ReadOnlyProperty<Player> getOwnerProperty() {
+			return this.owner;
 		}
 	}
 }
