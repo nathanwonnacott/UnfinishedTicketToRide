@@ -1,9 +1,10 @@
-package tickettoride;
+package tickettoride.players;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import tickettoride.Mover;
 import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;

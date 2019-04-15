@@ -6,7 +6,6 @@ import java.util.Set;
 
 import tickettoride.Mover;
 import tickettoride.Mover.DestinationCardSelectionMove;
-import tickettoride.Player;
 import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
