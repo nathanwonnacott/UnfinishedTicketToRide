@@ -1,6 +1,7 @@
 package tickettoride.players;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,12 +61,16 @@ public interface Player {
 	public void setNumberOfTrainsRemainingView(Map<Player, Integer> unmodifiableTrainsRemaining);
 	
 	/**
-	 * Performs a move on the specified map data using the mover object. This method should
-	 * block until the move is complete. In other words, after calling this method, a call to 
-	 * <pre>mover.getTurnCompletedBinding().get()</pre> should return false.
-	 * @param mapData
+	 * Performs a move on the specified map data using the mover object. Note that this method
+	 * should not attempt to modify the state of the game other than through the mover object.
+	 * This method should block until the move is complete. In other words, after calling this 
+	 * method, a call to <pre>mover.getTurnCompletedBinding().get()</pre> should return false.
+	 * @param mapData The current map
+	 * @param faceUpTransportationCards list of 5 card values representing the 5 face-up transportation 
+	 * cards. If any of the transportation card slots is empty, there should be null value in that index
+	 * of the list.
 	 * @param mover
 	 */
-	public void executeMove(MapData mapData, Mover mover);
+	public void executeMove(MapData mapData, List<CardColor> faceUpTransportationCards, Mover mover);
 	
 }

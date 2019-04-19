@@ -1,6 +1,7 @@
 package tickettoride.players;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,10 +37,10 @@ public class RandomAI implements Player {
 	}
 
 	@Override
-	public void executeMove(MapData mapData, Mover mover) {
+	public void executeMove(MapData mapData, List<CardColor> faceUpTransportationCards, Mover mover) {
 		//This will be modified by the instructor later. For now, it will just draw destination cards until
 		//it's empty and then just draw the first transportation card.
-		if(mover.canSelectDestinationCards()) {
+		if(mover.getNumDestinationCardsThatCanBeDrawn() > 0) {
 			DestinationCardSelectionMove selector =  mover.getDestinationCardsSelectionMove();
 			DestinationCard card = selector.getDestinationCardOptions().iterator().next();
 			selector.selectDestinationCards(Collections.singleton(card));

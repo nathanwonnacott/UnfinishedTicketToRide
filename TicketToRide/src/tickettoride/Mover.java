@@ -32,17 +32,20 @@ public interface Mover {
 	 * result in false) until one or more destination cards are selected from the returned
 	 * DestinationCardSelectionMove object
 	 * @return {@link DestinationCardSelectionMove}
-	 * @throws {@link IllegalMoveException} if {@link #canSelectDestinationCards()} would return
+	 * @throws {@link IllegalMoveException} if {@link #getNumDestinationCardsThatCanBeDrawn()} would return
 	 * false
 	 */
 	public DestinationCardSelectionMove getDestinationCardsSelectionMove();
 	/**
-	 * Indicates if the player may select destination cards. This will return true unless there
-	 * are no remaining destination cards in the deck, if the player has already begun or completed 
-	 * another move this turn, or if the player has already draw destination cards this turn.
-	 * @return true if selecting a destination card is a valid current move
+	 * Indicates if the player may select destination cards (and how many can be drawn).
+	 * This will return 2 unless there is 1 or no remaining destination cards in the deck, 
+	 * if the player has already begun or completed another move this turn, or if the 
+	 * player has already drawn destination cards this turn.
+	 * @return 2 if drawing two destination card is a valid current move, 1 if drawing destination
+	 * cards is a valid current move but only one is left, or 0, if drawing destination cards is not 
+	 * currently allowed
 	 */
-	public boolean canSelectDestinationCards();
+	public int getNumDestinationCardsThatCanBeDrawn();
 	
 	/**
 	 * Draws the transportation card from the specified draw location. If this drawing a {@link CardColor#ANY}
