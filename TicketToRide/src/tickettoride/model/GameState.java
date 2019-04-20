@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import tickettoride.model.MapData.CardColor;
 import tickettoride.utilities.ImageLoader;
@@ -54,7 +56,15 @@ public class GameState {
 		return gameDefinition;
 	}
 	
-	public List<ObjectProperty<CardColor>> getFaceUpTransportationCardProperties() {
+	public ObservableBooleanValue getTransportationCardsDeckRemainingProperty() {
+		return new SimpleBooleanProperty(true);
+	}
+	
+	public ObservableBooleanValue getDestinationCardsDeckRemainingProperty() {
+		return new SimpleBooleanProperty(true);
+	}
+	
+	public List<ObservableValue<CardColor>> getFaceUpTransportationCardProperties() {
 		//TODO replace with properties representing each face up transportation card
 		return Arrays.asList(new SimpleObjectProperty<>(),
 				new SimpleObjectProperty<>(CardColor.ANY),
@@ -62,4 +72,5 @@ public class GameState {
 				new SimpleObjectProperty<>(CardColor.BLUE),
 				new SimpleObjectProperty<>(CardColor.GREEN));
 	}
+
 }

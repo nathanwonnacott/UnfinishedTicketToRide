@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -136,7 +136,7 @@ public class TicketToRideController {
 	private void setUpSidePanelCardBindings() {
 		
 		try {
-			Image transportCardBack = ImageLoader.load("images/cardBack.jpg");
+			Image transportCardBack = ImageLoader.load("images/transportationBack.jpg");
 			deck.setFill(new ImagePattern(transportCardBack));
 			
 			Map<CardColor, Image> transportationCardImages = new HashMap<>();
@@ -160,9 +160,9 @@ public class TicketToRideController {
 			game.addListener((x) -> {
 				drawCardRects.forEach(r -> r.fillProperty().unbind());
 				if(game.getValue() != null) {
-					List<ObjectProperty<CardColor>> cardProperties = game.getValue().getFaceUpTransportationCardProperties();
+					List<ObservableValue<CardColor>> cardProperties = game.getValue().getFaceUpTransportationCardProperties();
 					for(int i =0; i < drawCardRects.size(); i++) {
-						final ObjectProperty<CardColor> colorProperty = cardProperties.get(i);
+						final ObservableValue<CardColor> colorProperty = cardProperties.get(i);
 						drawCardRects.get(i)
 							.fillProperty()
 							.bind(Bindings.createObjectBinding(
