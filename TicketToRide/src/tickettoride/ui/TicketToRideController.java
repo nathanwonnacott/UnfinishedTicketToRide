@@ -91,7 +91,11 @@ public class TicketToRideController {
 	protected Rectangle cardToDraw5;
 	/** Graphical element representing the deck of transportation cards */
 	@FXML
-	protected Rectangle deck;
+	protected Rectangle transportationDeck;
+	
+	/** Graphical element representing the deck of destination cards */
+	@FXML
+	protected Rectangle destinationDeck;
 	
 	/** Minimum width that the map should be sized to before using the scroll bars (this will probably change) */
 	private final double MIN_MAP_WIDTH = 400;
@@ -137,7 +141,10 @@ public class TicketToRideController {
 		
 		try {
 			Image transportCardBack = ImageLoader.load("images/transportationBack.jpg");
-			deck.setFill(new ImagePattern(transportCardBack));
+			transportationDeck.setFill(new ImagePattern(transportCardBack));
+			
+			Image destinationCardBack = ImageLoader.load("images/destinationBack.jpg");
+			destinationDeck.setFill(new ImagePattern(destinationCardBack));
 			
 			Map<CardColor, Image> transportationCardImages = new HashMap<>();
 			transportationCardImages.put(CardColor.ANY, ImageLoader.load("images/wild.jpg"));
