@@ -35,9 +35,15 @@ public class RandomAI implements Player {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void setFaceUpTransportationCardsView(List<CardColor> cards) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void executeMove(MapData mapData, List<CardColor> faceUpTransportationCards, Mover mover) {
+	public void executeMove(MapData mapData, Mover mover) {
 		//This will be modified by the instructor later. For now, it will just draw destination cards until
 		//it's empty and then just draw the first transportation card.
 		if(mover.getNumDestinationCardsThatCanBeDrawn() > 0) {

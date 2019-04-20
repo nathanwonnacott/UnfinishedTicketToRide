@@ -49,7 +49,7 @@ public interface Player {
 	public void setDestinationCardsView(Set<DestinationCard> unmodifiableDestinationCards);
 	
 	/**
-	 * Sets a reference to a read-only version map indicating how many train pieces each player has remaining.
+	 * Sets a reference to a read-only version of the map indicating how many train pieces each player has remaining.
 	 * The map should be created via {@link Collections#unmodifiableMap} so that the player can't cheat by 
 	 * modifying the map other than via a {@link Mover} object.
 	 * </br></br>
@@ -61,16 +61,27 @@ public interface Player {
 	public void setNumberOfTrainsRemainingView(Map<Player, Integer> unmodifiableTrainsRemaining);
 	
 	/**
+	 * Sets a reference to a read-only list indicating the colors of the face-up transportation cards
+	 * on the board. A null indicates a position which has no card (this will only occur once the deck
+	 * of transportation cards has run out).
+	 * The list should be created via {@link Collections#unmodifiableList} so that the player can't cheat by 
+	 * modifying the cards other than by drawing one via a {@link Mover} object.
+	 * </br></br>
+	 * This method should be called during the initialization of the game with a reference to a list that has 
+	 * the initial face-up transportation cards.
+	 * @param cards Unmodifiable view of the 5 face-up transportation cards, where index 0 represents the
+	 * first face-up card and index 4 represents the last.
+	 */
+	public void setFaceUpTransportationCardsView(List<CardColor> cards);
+	
+	/**
 	 * Performs a move on the specified map data using the mover object. Note that this method
 	 * should not attempt to modify the state of the game other than through the mover object.
 	 * This method should block until the move is complete. In other words, after calling this 
 	 * method, a call to <pre>mover.getTurnCompletedBinding().get()</pre> should return false.
 	 * @param mapData The current map
-	 * @param faceUpTransportationCards list of 5 card values representing the 5 face-up transportation 
-	 * cards. If any of the transportation card slots is empty, there should be null value in that index
-	 * of the list.
 	 * @param mover
 	 */
-	public void executeMove(MapData mapData, List<CardColor> faceUpTransportationCards, Mover mover);
+	public void executeMove(MapData mapData, Mover mover);
 	
 }
