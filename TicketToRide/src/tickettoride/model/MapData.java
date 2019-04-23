@@ -55,7 +55,9 @@ public interface MapData extends Cloneable {
 	public Collection<Connection> getConnectionsToOrFromDest(Destination dest);
 	
 	/**
-	 * Creates a deep copy of this map data
+	 * Creates a deep copy of this map data.
+	 * Remember that since connections have references to destinations and this is a deep copy, then
+	 * the new connections should refer to the new instances of the destinations.
 	 * @return clone of the map data
 	 */
 	public MapData clone();
