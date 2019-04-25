@@ -1,6 +1,8 @@
 package tickettoride;
 
 import java.util.Map;
+
+import tickettoride.model.GameState;
 import tickettoride.model.MapData;
 import tickettoride.players.Player;
 
@@ -18,13 +20,13 @@ public class GameController {
 
 	/**
 	 * Instantiates a game controller object
-	 * @param map map data to represent the game map state
+	 * @param gameState initial game state. This object will be modified by the controller
 	 * @param players map from player descriptions to players participating
 	 * in the game. The player description could be as simple as "Player 1", 
 	 * "Player 2", etc, or could be an actual name, or description of player type
 	 * combined with a number or name.
 	 */
-	public GameController(MapData map, Map<String, ? extends Player> players) {
+	public GameController(GameState gameState, Map<String, ? extends Player> players) {
 		//TODO to be implemented by student
 		
 	}
