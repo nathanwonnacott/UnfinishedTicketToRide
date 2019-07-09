@@ -56,4 +56,9 @@ public class RandomAI implements Player {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Random AI Player";
+	}
+
 }
