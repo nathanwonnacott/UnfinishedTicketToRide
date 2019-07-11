@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 
@@ -60,5 +61,28 @@ public class MappedBinding {
 	public static <I1, I2> DoubleBinding createDoubleBinding(ObservableValue<I1> obs1, ObservableValue<I2> obs2, 
 														BiFunction<I1, I2, Double> mapping) {
 		return Bindings.createDoubleBinding(() -> mapping.apply(obs1.getValue(), obs2.getValue()), obs1, obs2);
+	}
+	
+	/**
+	 * Creates a {@link BooleanBinding} that results in the specified mapping function being applied to the
+	 * value of the specified observable. The binding is invalidated whenever the observable is changed.
+	 * @param observable
+	 * @param mapping
+	 * @return
+	 */
+	public static <I> BooleanBinding createBooleanBinding(ObservableValue<I> observable, Function<I, Boolean> mapping) {
+		return Bindings.createBooleanBinding(() -> mapping.apply(observable.getValue()), observable);
+	}
+	
+	/**
+	 * Creates a {@link BooleanBinding} that results in the specified binary mapping function being applied to the
+	 * value of the 2 specified observables. The binding is invalidated whenever either observable is changed.
+	 * @param observable
+	 * @param mapping
+	 * @return
+	 */
+	public static <I1, I2> BooleanBinding createBooleanBinding(ObservableValue<I1> obs1, ObservableValue<I2> obs2, 
+														BiFunction<I1, I2, Boolean> mapping) {
+		return Bindings.createBooleanBinding(() -> mapping.apply(obs1.getValue(), obs2.getValue()), obs1, obs2);
 	}
 }
