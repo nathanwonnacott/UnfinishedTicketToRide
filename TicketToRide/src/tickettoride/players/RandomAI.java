@@ -7,6 +7,7 @@ import java.util.Set;
 
 import tickettoride.Mover;
 import tickettoride.Mover.DestinationCardSelectionMove;
+import tickettoride.model.GameDefinition;
 import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
@@ -59,6 +60,11 @@ public class RandomAI implements Player {
 	@Override
 	public String getDescription() {
 		return "Random AI Player";
+	}
+
+	@Override
+	public void initialize(GameDefinition gameDefinition, int numPlayers) {
+		// This player implementation doesn't need to do anything on initialization
 	}
 
 }

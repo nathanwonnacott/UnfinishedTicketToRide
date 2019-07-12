@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import tickettoride.Mover;
+import tickettoride.model.GameDefinition;
 import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
@@ -23,6 +24,16 @@ import tickettoride.model.MapData.CardColor;
  *
  */
 public interface Player {
+	
+	/**
+	 * Method to be called once at the beginning of the game to provide each player
+	 * with a definition of the game. Many player implementations may not need to do
+	 * anything in this method, but this can optionally be implemented if AI players
+	 * need to prepare any strategies or anything based on the map, number of players, etc.
+	 * @param gameDefinition the definition of the game that will be played
+	 * @param numPlayers the number of players in this game
+	 */
+	public void initialize(GameDefinition gameDefinition, int numPlayers);
 
 	/**
 	 * Sets a reference to a read-only version of the player's transportation cards hand. The map should be created 
