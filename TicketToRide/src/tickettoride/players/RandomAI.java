@@ -1,10 +1,9 @@
 package tickettoride.players;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import tickettoride.Mover;
 import tickettoride.Mover.DestinationCardSelectionMove;
 import tickettoride.model.GameDefinition;
@@ -18,30 +17,6 @@ import tickettoride.model.MapData.CardColor;
  * @author nate
  */
 public class RandomAI implements Player {
-	
-	@Override
-	public void setTransportationCardsMapView(Map<CardColor, Integer> unmodifiableTransportationCardsMap) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setDestinationCardsView(Set<DestinationCard> unmodifiableDestinationCards) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setNumberOfTrainsRemainingView(Map<Player, Integer> unmodifiableTrainsRemaining) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	@Override
-	public void setFaceUpTransportationCardsView(List<CardColor> cards) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void executeMove(MapData mapData, Mover mover) {
@@ -65,6 +40,30 @@ public class RandomAI implements Player {
 	@Override
 	public void initialize(GameDefinition gameDefinition, int numPlayers) {
 		// This player implementation doesn't need to do anything on initialization
+	}
+
+	@Override
+	public void setTransportationCardsMapView(ObservableMap<CardColor, Integer> unmodifiableTransportationCardsMap) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDestinationCardsView(ObservableSet<DestinationCard> unmodifiableDestinationCards) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNumberOfTrainsRemainingView(ObservableMap<Player, Integer> unmodifiableTrainsRemaining) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFaceUpTransportationCardsView(ObservableList<CardColor> cards) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,7 +3,6 @@ package tickettoride;
 import java.util.Map;
 
 import tickettoride.model.GameState;
-import tickettoride.model.MapData;
 import tickettoride.players.Player;
 
 /**

@@ -1,22 +1,24 @@
 package tickettoride.model;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import javafx.scene.image.Image;
+import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData.CardColor;
+import tickettoride.players.Player;
 import tickettoride.utilities.ImageLoader;
 
 /**
  * This class keeps track of the entire state of the game (including the map, various decks, players
  * hands, etc.)
  * </br></br>
- * Students will need to modify this file, but I wouldn't recomment modifying it yet because there are still
+ * Students will need to modify this file, but I wouldn't recommend modifying it yet because there are still
  * some more changes that I need to make to it.
  * </br></br>
  * TODO for Nate: add more documentation to this class once it's a little more solidified.
@@ -64,13 +66,26 @@ public class GameState {
 		return new SimpleBooleanProperty(true);
 	}
 	
-	public List<ObservableValue<CardColor>> getFaceUpTransportationCardProperties() {
-		//TODO replace with properties representing each face up transportation card
-		return Arrays.asList(new SimpleObjectProperty<>(),
-				new SimpleObjectProperty<>(CardColor.ANY),
-				new SimpleObjectProperty<>(CardColor.BLACK),
-				new SimpleObjectProperty<>(CardColor.BLUE),
-				new SimpleObjectProperty<>(CardColor.GREEN));
+	public ObservableList<CardColor> getFaceUpTransportationCards() {
+		//TODO replace this with non-hardcoded values
+		ObservableList<CardColor> list = FXCollections.observableArrayList();
+		list.add(CardColor.ANY);
+		list.add(CardColor.BLACK);
+		list.add(CardColor.BLUE);
+		list.add(CardColor.GREEN);
+		return list;
+	}
+	
+	public ObservableMap<CardColor, Integer> getPlayersTransportationCardsHand(Player player) {
+		return null;
+	}
+	
+	public ObservableSet<DestinationCard> getPlayersDestinationCards(Player player) {
+		return null;
+	}
+	
+	public ObservableMap<Player, Integer> getNumTrainsRemaining() {
+		return null;
 	}
 
 }

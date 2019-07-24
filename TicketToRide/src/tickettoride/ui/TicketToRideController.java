@@ -7,13 +7,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -165,27 +168,36 @@ public class TicketToRideController {
 					cardToDraw5);
 			
 			game.addListener((x) -> {
-				drawCardRects.forEach(r -> r.fillProperty().unbind());
+				
 				if(game.getValue() != null) {
-					List<ObservableValue<CardColor>> cardProperties = game.getValue().getFaceUpTransportationCardProperties();
-					for(int i =0; i < drawCardRects.size(); i++) {
-						final ObservableValue<CardColor> colorProperty = cardProperties.get(i);
-						drawCardRects.get(i)
-							.fillProperty()
-							.bind(Bindings.createObjectBinding(
-									() -> {
-										CardColor color = colorProperty.getValue();
-										if(color == null) {
-											return null;
-										}
-										else {
-											return new ImagePattern(transportationCardImages.get(color));
-										}
-									},
-									colorProperty
-									)
-									);
-					}
+					ObservableList<CardColor> cardProperties = game.getValue().getFaceUpTransportationCards();
+					
+					//Little function to update a GUI rect based on a card value. Consumes the index of the card
+					IntConsumer updateDrawRect = i -> {
+						CardColor color = cardProperties.get(i);
+						ImagePattern pattern = color == null ? null : new ImagePattern(transportationCardImages.get(color));
+						drawCardRects.get(i).setFill(pattern);
+					};
+					
+					//Set to initial card values, then add listener for changes
+					IntStream.range(0, cardProperties.size()).forEach(updateDrawRect);
+					
+					cardProperties.addListener(new ListChangeListener<CardColor>() {
+
+						@Override
+						public void onChanged(Change<? extends CardColor> change) {
+							//Most likely, this while loop will only ever iterate once per call
+							while(change.next()) {
+								//Most likely, this int stream will just have one element, but better to be safe.
+								IntStream.range(change.getFrom(), change.getTo()).forEach(updateDrawRect);
+							}
+						}
+						
+					});
+				}
+				else {
+					//If the game is null, clear them all (I don't think this will ever actually happen)
+					drawCardRects.forEach(r -> r.setFill(null));
 				}
 			});
 			

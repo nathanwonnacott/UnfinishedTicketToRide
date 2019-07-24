@@ -1,10 +1,9 @@
 package tickettoride.players;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import tickettoride.Mover;
 import tickettoride.model.GameDefinition;
 import tickettoride.model.GameDefinition.DestinationCard;
@@ -37,7 +36,7 @@ public interface Player {
 
 	/**
 	 * Sets a reference to a read-only version of the player's transportation cards hand. The map should be created 
-	 * via {@link Collections#unmodifiableMap} so that the player can't cheat by modifying the map other than
+	 * via {@link FXCollections#unmodifiableObservableMap} so that the player can't cheat by modifying the map other than
 	 * via a {@link Mover} object.
 	 * </br></br>
 	 * This method should be called during the initialization of the game with a reference to an empty map and then
@@ -46,22 +45,22 @@ public interface Player {
 	 * where the key is the color of transportation card and the value is the number of that card that the
 	 * player has.
 	 */
-	public void setTransportationCardsMapView(Map<CardColor, Integer> unmodifiableTransportationCardsMap);
-	
+	public void setTransportationCardsMapView(ObservableMap<CardColor, Integer> unmodifiableTransportationCardsMap);
+
 	/**
 	 * Sets a reference to a read-only version of the player's destination cards. The set should be created 
-	 * via {@link Collections#unmodifiableSet} so that the player can't cheat by changing its cards other than
+	 * via {@link FXCollections#unmodifiableObservableSet} so that the player can't cheat by changing its cards other than
 	 * via a {@link Mover} object.
 	 * </br></br>
 	 * This method should be called during the initialization of the game with a reference to an empty set and then
 	 * that set should reflect the player's destination cards throughout the game.
 	 * @param unmodifiableDestinationCards Unmodifiable view of this player's destination cards
 	 */
-	public void setDestinationCardsView(Set<DestinationCard> unmodifiableDestinationCards);
+	public void setDestinationCardsView(ObservableSet<DestinationCard> unmodifiableDestinationCards);
 	
 	/**
 	 * Sets a reference to a read-only version of the map indicating how many train pieces each player has remaining.
-	 * The map should be created via {@link Collections#unmodifiableMap} so that the player can't cheat by 
+	 * The map should be created via {@link FXCollections#unmodifiableObservableMap} so that the player can't cheat by 
 	 * modifying the map other than via a {@link Mover} object.
 	 * </br></br>
 	 * This method should be called during the initialization of the game with a reference to a map that should
@@ -69,13 +68,13 @@ public interface Player {
 	 * @param unmodifiableTrainsRemaining Unmodifiable view of the number of trains remaining for each
 	 * player where the key is the player and the value is the number of trains left for that player.
 	 */
-	public void setNumberOfTrainsRemainingView(Map<Player, Integer> unmodifiableTrainsRemaining);
+	public void setNumberOfTrainsRemainingView(ObservableMap<Player, Integer> unmodifiableTrainsRemaining);
 	
 	/**
 	 * Sets a reference to a read-only list indicating the colors of the face-up transportation cards
 	 * on the board. A null indicates a position which has no card (this will only occur once the deck
 	 * of transportation cards has run out).
-	 * The list should be created via {@link Collections#unmodifiableList} so that the player can't cheat by 
+	 * The list should be created via {@link FXCollections#unmodifiableObservableList} so that the player can't cheat by 
 	 * modifying the cards other than by drawing one via a {@link Mover} object.
 	 * </br></br>
 	 * This method should be called during the initialization of the game with a reference to a list that has 
@@ -83,7 +82,7 @@ public interface Player {
 	 * @param cards Unmodifiable view of the 5 face-up transportation cards, where index 0 represents the
 	 * first face-up card and index 4 represents the last.
 	 */
-	public void setFaceUpTransportationCardsView(List<CardColor> cards);
+	public void setFaceUpTransportationCardsView(ObservableList<CardColor> cards);
 	
 	/**
 	 * Performs a move on the specified map data using the mover object. Note that this method
