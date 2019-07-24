@@ -1,6 +1,7 @@
 package tickettoride.model;
 
 import java.io.FileNotFoundException;
+import java.util.Collection;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -32,7 +33,7 @@ public class GameState {
 	private final Image background;
 	
 	
-	public GameState(GameDefinition gameDefinition) {
+	public GameState(Collection<Player> players, GameDefinition gameDefinition) {
 		this.gameDefinition = gameDefinition;
 		mapData = this.gameDefinition.getInitialMapData();
 		

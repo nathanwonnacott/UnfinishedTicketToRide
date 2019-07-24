@@ -31,6 +31,7 @@ import tickettoride.model.GameState;
 import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Destination;
+import tickettoride.players.RandomAI;
 import tickettoride.utilities.ImageLoader;
 
 /**
@@ -263,8 +264,8 @@ public class TicketToRideController {
 																	hardCodedMapData, 24);
 		
 		//Once your game definition is created, set the game property to a new GameState value initialized
-		//with the newly loaded game definition. This will cause the map to be drawn
-		game.setValue(new GameState(hardCodedGameDefinition));
+		//with the newly loaded game definition and collection of players. This will cause the map to be drawn
+		game.setValue(new GameState(Arrays.asList(new RandomAI(), new RandomAI()), hardCodedGameDefinition));
 		
 	}
 	
