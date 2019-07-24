@@ -76,14 +76,34 @@ public class GameState {
 		return list;
 	}
 	
+	/**
+	 * Returns an unmodifiable, observable map from card color to the number of that color that the specified
+	 * player has in its hand. If no cards exist in the players hand of a certain color (which will
+	 * often be the case for multiple colors), then it is ok if the map either does not have an entry
+	 * for that color or that the color maps to 0.
+	 * @param player The player in whose hand we want.
+	 * @return Unmodifiable, Observable map
+	 */
 	public ObservableMap<CardColor, Integer> getPlayersTransportationCardsHand(Player player) {
 		return null;
 	}
 	
+	
+	/**
+	 * Returns an observable set of destination cards that the specified
+	 * player has in its hand. 
+	 * @param player The player in whose hand we want.
+	 * @return Unmodifiable, Observable set
+	 */
 	public ObservableSet<DestinationCard> getPlayersDestinationCards(Player player) {
 		return null;
 	}
 	
+	/**
+	 * Returns an unmodifiable, observable map from players to the number of unused train pieces that the
+	 * player has remaining.
+	 * @return unmodifiable observable map
+	 */
 	public ObservableMap<Player, Integer> getNumTrainsRemaining() {
 		return null;
 	}
