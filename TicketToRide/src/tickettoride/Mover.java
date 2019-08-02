@@ -132,8 +132,12 @@ public interface Mover {
 		public void selectDestinationCards(Set<DestinationCard> cardsToKeep);
 		/**
 		 * Indicates if the specified destination cards are a valid set of cards to complete.
-		 * The only case where this would return false would be if the set is the empty set or
-		 * if it includes any cards that were not returned by {@link #getDestinationCardOptions()}
+		 * The only case where this would return false would be:
+		 * <ul>
+		 *   <li>the set is the empty set</li>
+		 *   <li>the set includes any cards that were not returned by {@link #getDestinationCardOptions()}</li>
+		 *   <li>this is the first turn of the game and the set only has one card</li>
+		 * </ul>
 		 * @param cardsToKeep The cards that the player wishes to keep
 		 * @return true if the cards can be selected
 		 */
