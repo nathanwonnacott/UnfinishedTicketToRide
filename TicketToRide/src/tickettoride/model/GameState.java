@@ -69,6 +69,15 @@ public class GameState {
 		return new SimpleIntegerProperty(100);
 	}
 	
+	/**
+	 * Removes and returns 3 destination cards from the destination card
+	 * deck (or if less than 3 are left, the remaining cards are returned)
+	 * @return
+	 */
+	public Collection<DestinationCard> drawDestinationCards() {
+		return null;
+	}
+	
 	public ObservableList<CardColor> getFaceUpTransportationCards() {
 		//TODO replace this with non-hardcoded values
 		ObservableList<CardColor> list = FXCollections.observableArrayList();

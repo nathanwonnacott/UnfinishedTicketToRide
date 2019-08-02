@@ -1,20 +1,72 @@
 package tickettoride;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalMatchers.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import tickettoride.Mover.DestinationCardSelectionMove;
+import tickettoride.Mover.IllegalMoveException;
+import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.GameState;
+import tickettoride.model.MapData;
+import tickettoride.model.MapData.CardColor;
+import tickettoride.model.MapData.Connection;
+import tickettoride.model.MapData.Destination;
 
 
 
 class MoverTest {
 
+	/**
+	 * Mover object to be used in all the tests. Should get reset before each test by
+	 * the {@link #setup()} and {@link #setupForFirstMove()} methods.
+	 */
 	private Mover mover = null;
+	/**
+	 * Mocked game state that should be referenced by {@link #mover} and will be used
+	 * to verify interactions with game state objects.
+	 */
 	private GameState mockedGameState = mock(GameState.class);
+	
+	/**
+	 * Mocked map data. The map will just have a few destinations/connections needed 
+	 * for tests.
+	 */
+	private MapData mockedMapData = mock(MapData.class);
+
+	/**
+	 * First mocked destination to be part of the mocked map
+	 */
+	private Destination mockedDestination1 = mock(Destination.class);
+	
+
+	/**
+	 * Second mocked destination to be part of the mocked map
+	 */
+	private Destination mockedDestination2 = mock(Destination.class);
+	
+	/**
+	 * Connection between {@link #mockedDestination1} and {@link #mockedDestination2}
+	 * In the initial setup, this connection will have a length of 1 and the color green.
+	 */
+	private Connection mockedConnection1to2 = mock(Connection.class);
+	
+	/**
+	 * Property indicating the number of destination cards remaining in the game state
+	 */
+	private IntegerProperty destinationCardsRemainingProperty = new SimpleIntegerProperty(100);
 	
 	@BeforeEach
 	public void setup() {
@@ -30,8 +82,26 @@ class MoverTest {
 		//using in the tests.
 		//The wiki page for the Mover implementation and testing phase explains in
 		//more detail how mocked objects work.
+		when(mockedGameState.getMap()).thenReturn(mockedMapData);
 		when(mockedGameState.getDestinationCardsDeckRemainingProperty())
-			.thenReturn(new SimpleIntegerProperty(100));
+			.thenReturn(destinationCardsRemainingProperty);
+		
+		//Set up mocked map
+		when(mockedMapData.getDestinations())
+			.thenReturn(Arrays.asList(mockedDestination1, mockedDestination2));
+		
+		when(mockedMapData.getConnections())
+			.thenReturn(Collections.singleton(mockedConnection1to2));
+		
+		mockedMapData.getConnectionsToOrFromDest(same(mockedDestination1));
+		when(mockedMapData.getConnectionsToOrFromDest(
+				or(same(mockedDestination1), 
+						same(mockedDestination2))))
+			.thenReturn(Collections.singleton(mockedConnection1to2));
+		
+		when(mockedConnection1to2.getNumSegments()).thenReturn(1);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.GREEN);
+		
 	}
 	
 	private void setupForFirstMove() {
@@ -49,10 +119,39 @@ class MoverTest {
 		
 	}
 	
+	/** Utility method to execute a simple connection claiming method. This isn't
+	 * intended to test the collection claiming method itself, but rather be used in 
+	 * other test to ensure things like not being able to execute other move types
+	 * after claiming a connection.
+	 */
+	private void claimConnection() {
+		mover.buildConnection(mockedConnection1to2, Collections.singleton(CardColor.ANY));
+	}
+	
 	@Test
-	public void testGetDestinationCardSelectionMoveOnFirstTurn() {
+	public void testSelectDestinationCardsOnFirstTurn() {
 		setupForFirstMove();
-		fail("Not yet implemented");
+
+		DestinationCard destCard1 = mock(DestinationCard.class);
+		DestinationCard destCard2 = mock(DestinationCard.class);
+		DestinationCard destCard3 = mock(DestinationCard.class);
+		
+		Collection<DestinationCard> expectedDestinationOptions =
+				Arrays.asList(destCard1, destCard2, destCard3);
+		
+		when(mockedGameState.drawDestinationCards()).thenReturn(expectedDestinationOptions);
+		
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		
+		assertThat(selectionMove.getDestinationCardOptions(),
+				containsInAnyOrder(expectedDestinationOptions));
+		
+		//TODO add checks that you must select 2 or three of these
+		//can probably save all other checks for how the move operates for the 
+		//more general destination card selection tests. Or find a nice reusable
+		//way to check for either case
+		fail("Not done implementing this test yet");
+		
 	}
 	
 	@Test
@@ -73,8 +172,7 @@ class MoverTest {
 				"When more than 3 destination ards are remaining, should be able to draw 3 destination cards");
 		
 		for(int cardsRemaining = 3; cardsRemaining >=0 ; cardsRemaining--) {
-			when(mockedGameState.getDestinationCardsDeckRemainingProperty())
-				.thenReturn(new SimpleIntegerProperty(cardsRemaining));
+			destinationCardsRemainingProperty.set(cardsRemaining);
 			assertEquals(cardsRemaining, mover.getNumDestinationCardsThatCanBeDrawn(),
 					"When only " + cardsRemaining + " destination cards are remaining, only " +
 							cardsRemaining + " cards should be able to be drawn");
@@ -83,12 +181,35 @@ class MoverTest {
 	
 	@Test
 	public void testCantDrawDestinationCardsAfterTrainCardsAreDrawn() {
-		fail("Not yet implemented");
+		mover.drawTransportationCard(1);
+		assertEquals(0, mover.getNumDestinationCardsThatCanBeDrawn(),
+				"Cannot draw destination cards after a train card has been drawn");
+		
+		try {
+			mover.getDestinationCardsSelectionMove();
+			fail("Illegal move exception should have been thrown when attempting"
+					+ " to draw destination card after drawing a transportation card");
+		}
+		catch(IllegalMoveException e) {
+			//Do nothing
+		}
 	}
 	
 	@Test
 	public void testCantDrawDestinationCardsAfterRouteIsClaimed() {
-		fail("Not yet implemented");
+		
+		claimConnection();
+		assertEquals(0, mover.getNumDestinationCardsThatCanBeDrawn(),
+				"Cannot draw destination cards after claiming a connection");
+		
+		try {
+			mover.getDestinationCardsSelectionMove();
+			fail("Illegal move exception should have been thrown when attempting"
+					+ " to draw destination card after claiming a connection");
+		}
+		catch(IllegalMoveException e) {
+			//Do nothing
+		}
 	}
 
 	@Test
@@ -116,29 +237,4 @@ class MoverTest {
 		fail("Not yet implemented");
 	}
 
-	//TODO make tests for DestinationCardSelectionMove class
-//	@Test
-//	public static interface DestinationCardSelectionMove {
-//		/**
-//		 * @return the destination cards that were drawn (this will normally be
-//		 * 3 cards, but could be less if there are less than 3 cards remaining in the deck)
-//		 */
-//		public Set<DestinationCard> getDestinationCardOptions();
-//		/**
-//		 * Completes the move by choosing the destination cards to keep
-//		 * @param cardsToKeep Set containing which of the destination cards out of those
-//		 * returned by {@link #getDestinationCardOptions()} that will be kept
-//		 * @throws IllegalMoveException if {@link #canSelectDestinationCards(Set)} would
-//		 * return false
-//		 */
-//		public void selectDestinationCards(Set<DestinationCard> cardsToKeep);
-//		/**
-//		 * Indicates if the specified destination cards are a valid set of cards to complete.
-//		 * The only case where this would return false would be if the set is the empty set or
-//		 * if it includes any cards that were not returned by {@link #getDestinationCardOptions()}
-//		 * @param cardsToKeep The cards that the player wishes to keep
-//		 * @return true if the cards can be selected
-//		 */
-//		public boolean canSelectDestinationCards(Set<DestinationCard> cardsToKeep);
-//	}
 }

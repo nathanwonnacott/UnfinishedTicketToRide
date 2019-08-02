@@ -33,7 +33,7 @@ public interface Mover {
 	 * DestinationCardSelectionMove object
 	 * @return {@link DestinationCardSelectionMove}
 	 * @throws {@link IllegalMoveException} if {@link #getNumDestinationCardsThatCanBeDrawn()} would return
-	 * false
+	 * 0
 	 */
 	public DestinationCardSelectionMove getDestinationCardsSelectionMove();
 	/**
