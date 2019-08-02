@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -63,8 +65,8 @@ public class GameState {
 		return new SimpleBooleanProperty(true);
 	}
 	
-	public ObservableBooleanValue getDestinationCardsDeckRemainingProperty() {
-		return new SimpleBooleanProperty(true);
+	public ObservableIntegerValue getDestinationCardsDeckRemainingProperty() {
+		return new SimpleIntegerProperty(100);
 	}
 	
 	public ObservableList<CardColor> getFaceUpTransportationCards() {
