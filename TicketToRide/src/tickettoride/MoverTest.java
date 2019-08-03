@@ -346,16 +346,39 @@ class MoverTest {
 		catch(IllegalMoveException e) {} //do nothing
 	}
 	
-	@Test
-	public void testCantDrawDestinationCardsAfterTrainCardsAreDrawn() {
+	@ParameterizedTest(name = "Test can't draw destination cards after {0} train cards are drawn")
+	@ValueSource(ints = {1, 2})
+	public void testCantDrawDestinationCardsAfterTrainCardsAreDrawn(int numTrainCardsDrawn) {
 		mover.drawTransportationCard(1);
+		ensureCantDrawDestinationCards("draw destination cards after a train card has been drawn");
+	}
+	
+	@Test
+	public void testCantDrawDestinationCardsAfterRouteIsClaimed() {
+		claimConnection();
+		ensureCantDrawDestinationCards("draw destination cards after claiming a connection");
+	}
+	
+	@Test
+	public void testCantDrawDestinationCardsAfterBeginningADestinationCardDraw() {
+		mover.getDestinationCardsSelectionMove();
+		ensureCantDrawDestinationCards("draw destination cards after already starting a destination draw process");
+	}
+	
+	@Test
+	public void testCantDrawDestinationCardsAfterCompletingADestinationCardDraw() {
+		mover.getDestinationCardsSelectionMove().selectDestinationCards(Collections.singleton(destCard1));
+		ensureCantDrawDestinationCards("draw destination cards after already completing a destination card draw");
+	}
+	
+	private void ensureCantDrawDestinationCards(String attemptedMoveDescription) {
 		assertEquals(0, mover.getNumDestinationCardsThatCanBeDrawn(),
-				"Cannot draw destination cards after a train card has been drawn");
+				"Cannot " + attemptedMoveDescription);
 		
 		try {
 			mover.getDestinationCardsSelectionMove();
 			fail("Illegal move exception should have been thrown when attempting"
-					+ " to draw destination card after drawing a transportation card");
+					+ " to " + attemptedMoveDescription);
 		}
 		catch(IllegalMoveException e) {
 			//Do nothing
@@ -363,20 +386,26 @@ class MoverTest {
 	}
 	
 	@Test
-	public void testCantDrawDestinationCardsAfterRouteIsClaimed() {
+	public void testCantModifyDestinationCardDrawingOptions() {
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		Collection<DestinationCard> options = selectionMove.getDestinationCardOptions();
 		
-		claimConnection();
-		assertEquals(0, mover.getNumDestinationCardsThatCanBeDrawn(),
-				"Cannot draw destination cards after claiming a connection");
+		//Attempt to add another card to the options. It doesn't matter if the
+		//implementing class throws an exception, or just does nothing, but we
+		//must ensure that it doesn't change what we're actually allowed to do
+		DestinationCard cheaterCard = mock(DestinationCard.class);
+		try {
+			options.add(cheaterCard);
+		}
+		catch(Throwable t) {}
+		assertFalse(selectionMove.canSelectDestinationCards(Collections.singleton(cheaterCard)),
+				"Should not be able to select destination card that was illegally inserted into options set");
 		
 		try {
-			mover.getDestinationCardsSelectionMove();
-			fail("Illegal move exception should have been thrown when attempting"
-					+ " to draw destination card after claiming a connection");
+			selectionMove.selectDestinationCards(Collections.singleton(cheaterCard));
+			fail("Should throw exception when trying to select destination card that was illegally inserted into options set");
 		}
-		catch(IllegalMoveException e) {
-			//Do nothing
-		}
+		catch(IllegalMoveException e) {};
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////

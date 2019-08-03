@@ -119,7 +119,10 @@ public interface Mover {
 	public static interface DestinationCardSelectionMove {
 		/**
 		 * @return the destination cards that were drawn (this will normally be
-		 * 3 cards, but could be less if there are less than 3 cards remaining in the deck)
+		 * 3 cards, but could be less if there are less than 3 cards remaining in the deck).
+		 * Note that in order to avoid cheating AI players, you must make sure that Player cannot
+		 * modify it's options via the reference to this set (either by making this a copy of the
+		 * set or making it unmodifiable)
 		 */
 		public Set<DestinationCard> getDestinationCardOptions();
 		/**
