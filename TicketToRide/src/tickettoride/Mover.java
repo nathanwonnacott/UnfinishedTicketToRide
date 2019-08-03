@@ -3,7 +3,7 @@ package tickettoride;
 import java.util.Collection;
 import java.util.Set;
 
-import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableBooleanValue;
 import tickettoride.model.GameDefinition.DestinationCard;
 import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Connection;
@@ -105,9 +105,9 @@ public interface Mover {
 	public boolean canBuildConnection(Connection connectionToBuild, Collection<CardColor> cardsToUse);
 	
 	/**
-	 * @return Boolean binding indicating whether or not this turn has been completed.
+	 * @return observable Boolean indicating whether or not this turn has been completed.
 	 */
-	public BooleanBinding getTurnCompletedBinding();
+	public ObservableBooleanValue getTurnCompletedBinding();
 	
 	/**
 	 * This is basically another mover object that finishes out the destination card selection move.
