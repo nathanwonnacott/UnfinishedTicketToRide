@@ -78,6 +78,14 @@ public class GameState {
 		return null;
 	}
 	
+	/**
+	 * Places the specified destination cards at the bottom of the deck
+	 * @param cards cards to be placed at the bottom of the deck
+	 */
+	public void placeDestinationCardsAtBottomOfDeck(Collection<DestinationCard> cards) {
+		//TODO
+	}
+	
 	public ObservableList<CardColor> getFaceUpTransportationCards() {
 		//TODO replace this with non-hardcoded values
 		ObservableList<CardColor> list = FXCollections.observableArrayList();
@@ -109,6 +117,15 @@ public class GameState {
 	 */
 	public ObservableSet<DestinationCard> getPlayersDestinationCards(Player player) {
 		return null;
+	}
+	
+	/**
+	 * Adds the specified destination cards to the specified player's hand
+	 * @param player the play to whose hand the cards should be added
+	 * @param cards the destination cards to be added to the player's hand
+	 */
+	public void addDestinationCardsToPlayersHand(Player player, Collection<DestinationCard> cards) {
+		//TODO
 	}
 	
 	/**

@@ -10,12 +10,20 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import tickettoride.Mover.DestinationCardSelectionMove;
 import tickettoride.Mover.IllegalMoveException;
 import tickettoride.model.GameDefinition.DestinationCard;
@@ -24,6 +32,7 @@ import tickettoride.model.MapData;
 import tickettoride.model.MapData.CardColor;
 import tickettoride.model.MapData.Connection;
 import tickettoride.model.MapData.Destination;
+import tickettoride.players.Player;
 
 
 
@@ -34,6 +43,13 @@ class MoverTest {
 	 * the {@link #setup()} and {@link #setupForFirstMove()} methods.
 	 */
 	private Mover mover = null;
+	
+	/**
+	 * The player to be executing the moves (most likely won't need to mock out any of
+	 * it's methods)
+	 */
+	private Player mockedPlayer = mock(Player.class);
+	
 	/**
 	 * Mocked game state that should be referenced by {@link #mover} and will be used
 	 * to verify interactions with game state objects.
@@ -68,13 +84,42 @@ class MoverTest {
 	 */
 	private IntegerProperty destinationCardsRemainingProperty = new SimpleIntegerProperty(100);
 	
+	/** mocked destination card 1*/
+	private DestinationCard destCard1 = mock(DestinationCard.class);
+	/** mocked destination card 2*/
+	private DestinationCard destCard2 = mock(DestinationCard.class);
+	/** mocked destination card 3*/
+	private DestinationCard destCard3 = mock(DestinationCard.class);
+	
+	/** Standard collection of 3 destination cards to be returned by default from game state deck */
+	Collection<DestinationCard> expectedDestinationOptions =
+			Arrays.asList(destCard1, destCard2, destCard3);
+	
+	/** Mover's turn complete property. It will be populated in the setup 
+	 * method. Note that by populating it once in setup method rather than just
+	 * fetching the value each time we want to check, we can ensure that the
+	 * mover is updating the same boolean property each time.
+	 */
+	private ObservableBooleanValue turnCompleteBinding;
+	
+	/**
+	 * Capturing argument for collections of destination cards. Note, Captors for
+	 * generic types have to be declared as member variables like this in order
+	 * to be typesafe.
+	 */
+	@Captor
+	private ArgumentCaptor<Collection<DestinationCard>> destinationCardsCaptor;
+	
 	@BeforeEach
 	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		//This method will be run before each test.
 		//TODO set mover to be an instance of your implementation of mover
 		//This mover should be prepared to execute a non-first move of the game move.
 		//The mover should use a reference to mockedGameState as it's game state.
 		
+		
+		turnCompleteBinding = mover.getTurnCompletedBinding();
 		//Set up mocked methods for the game state.
 		//A mocked object is a fake object used for testing purposes. We're using a
 		//framework called mockito to instantiate a fake instance of GameState
@@ -85,6 +130,7 @@ class MoverTest {
 		when(mockedGameState.getMap()).thenReturn(mockedMapData);
 		when(mockedGameState.getDestinationCardsDeckRemainingProperty())
 			.thenReturn(destinationCardsRemainingProperty);
+		when(mockedGameState.drawDestinationCards()).thenReturn(expectedDestinationOptions);
 		
 		//Set up mocked map
 		when(mockedMapData.getDestinations())
@@ -102,6 +148,8 @@ class MoverTest {
 		when(mockedConnection1to2.getNumSegments()).thenReturn(1);
 		when(mockedConnection1to2.getColor()).thenReturn(CardColor.GREEN);
 		
+		
+		
 	}
 	
 	private void setupForFirstMove() {
@@ -117,7 +165,15 @@ class MoverTest {
 		//this method is executed, so you don't have to repeat any setup that was already done
 		//in that method.
 		
+		//Also note that if you create a new instance of a Mover here, then you'll also
+		//need to update turnCompleteBinding
+		
 	}
+	
+
+	///////////////////////////////////////////////////////////////////////////////
+	//	DESTINATION CARD DRAWING MOVES
+	///////////////////////////////////////////////////////////////////////////////
 	
 	/** Utility method to execute a simple connection claiming method. This isn't
 	 * intended to test the collection claiming method itself, but rather be used in 
@@ -129,34 +185,115 @@ class MoverTest {
 	}
 	
 	@Test
-	public void testSelectDestinationCardsOnFirstTurn() {
+	public void testCantSelect1DestinationCardsOnFirstTurn() {
 		setupForFirstMove();
-
-		DestinationCard destCard1 = mock(DestinationCard.class);
-		DestinationCard destCard2 = mock(DestinationCard.class);
-		DestinationCard destCard3 = mock(DestinationCard.class);
 		
-		Collection<DestinationCard> expectedDestinationOptions =
-				Arrays.asList(destCard1, destCard2, destCard3);
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		
+		assertFalse(selectionMove.canSelectDestinationCards(Collections.singleton(destCard1)),
+				"Should not be able to select 1 destination card on the first turn");
+		
+		try {
+			selectionMove.selectDestinationCards(Collections.singleton(destCard1));
+			fail("Selecting 1 destination card on the first turn should result in an exception");
+		}
+		catch(IllegalMoveException e) {}
+		
+		assertFalse(turnCompleteBinding.get(),
+				"After failing to select 1 destination card, the turn should not be complete");
+		
+	}
+	
+	@ParameterizedTest(name = "Selecting {0} destination cards on the first turn")
+	@ValueSource(ints = {2, 3})
+	public void testSelectingDestinationCardsOnFirstTurn(int numCardsToSelect) {
+		setupForFirstMove();
+		
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		
+		assertThat(
+				"Destination card selection options should be the 3 returned from the deck",
+				selectionMove.getDestinationCardOptions(),
+				containsInAnyOrder(expectedDestinationOptions));
+		
+		
+		testCardSelection(selectionMove, expectedDestinationOptions, numCardsToSelect);
+	}
+	
+	@ParameterizedTest(name = "Selecting {0} destination card(s) on turn other than first turn")
+	@ValueSource(ints = {1, 2, 3})
+	public void testGetDestinationCardSelectionMoveOnNonFirstTurn(int numCardsToSelect) {
 		
 		when(mockedGameState.drawDestinationCards()).thenReturn(expectedDestinationOptions);
 		
 		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
 		
-		assertThat(selectionMove.getDestinationCardOptions(),
+		assertThat(
+				"Destination card selection options should be the 3 returned from the deck",
+				selectionMove.getDestinationCardOptions(),
 				containsInAnyOrder(expectedDestinationOptions));
 		
-		//TODO add checks that you must select 2 or three of these
-		//can probably save all other checks for how the move operates for the 
-		//more general destination card selection tests. Or find a nice reusable
-		//way to check for either case
-		fail("Not done implementing this test yet");
 		
+		testCardSelection(selectionMove, expectedDestinationOptions, numCardsToSelect);
 	}
 	
-	@Test
-	public void testGetDestinationCardSelectionMoveOnNonFirstTurn() {
-		fail("Not yet implemented");
+	/**
+	 * Method asserts that cards can be selected, selects them, and verifies that
+	 * the game state was modified appropriately
+	 * @param move the DestinationCardSelectionMove object to use
+	 * @param options avialable destination cards (selected cards will be chosen from this collection
+	 * @param numToSelect number of cards to choose from that collection
+	 */
+	private void testCardSelection(DestinationCardSelectionMove move, Collection<DestinationCard> options, int numToSelect) {
+		Set<DestinationCard> cardsToSelect = options
+				.stream()
+				.limit(numToSelect)
+				.collect(Collectors.toSet());
+		
+		Set<DestinationCard> cardsNotSelected = options
+												.stream()
+												.filter(x -> ! cardsToSelect.contains(x))
+												.collect(Collectors.toSet());
+		
+		assertFalse(turnCompleteBinding.get(),
+				"Turn should not be complete prior to selecting the destination cards");
+		
+		move.selectDestinationCards(cardsToSelect);
+		
+		
+		
+		verify(mockedGameState).addDestinationCardsToPlayersHand(
+									mockedPlayer, 
+									destinationCardsCaptor.capture());
+		
+		//Note that it's possilbe that the mover implementation will call
+		//addDestinationCardsToPlayersHand once will all of the values, or
+		//call it once per value. The line below will get all of the calls
+		//to that method and combine all of the arguments into one collection
+		Collection<DestinationCard> allDestinationCardsDrawn =
+				destinationCardsCaptor.getAllValues()
+										.stream()
+										.flatMap(x -> x.stream())
+										.collect(Collectors.toList());
+		assertThat(allDestinationCardsDrawn,
+				containsInAnyOrder(cardsToSelect));
+		
+		//Now check that the non-selected cards were added to the bottom
+		//of the deck
+		verify(mockedGameState)
+			.placeDestinationCardsAtBottomOfDeck(destinationCardsCaptor.capture());
+		
+		Collection<DestinationCard> allDestinationCardsAddedBackToDeck =
+				destinationCardsCaptor.getAllValues()
+										.stream()
+										.flatMap(x -> x.stream())
+										.collect(Collectors.toList());
+		
+		assertThat(allDestinationCardsAddedBackToDeck,
+				containsInAnyOrder(cardsNotSelected));
+		
+		assertTrue(turnCompleteBinding.get(),
+				"Turn should be complete after destination cards are selected");
 	}
 
 	@Test
@@ -177,6 +314,36 @@ class MoverTest {
 					"When only " + cardsRemaining + " destination cards are remaining, only " +
 							cardsRemaining + " cards should be able to be drawn");
 		}
+	}
+	
+	@Test
+	public void testCantSelect0DestinationCards() {
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		assertFalse(selectionMove.canSelectDestinationCards(Collections.emptySet()),
+				"Should not be able to select 0 destination cards");
+		
+		try {
+			selectionMove.selectDestinationCards(Collections.emptySet());
+			fail("Selecting 0 destination cards should throw an exception");
+		}
+		catch(IllegalMoveException e) {} //do nothing
+	}
+	
+	@Test
+	public void testCantSelectCardThatWasNotOneOfOptions() {
+		
+		//Try to select 1 card that is present, plus a new card that was not one of the choices
+		Set<DestinationCard> badSelections = Set.of(destCard1, mock(DestinationCard.class));
+		
+		DestinationCardSelectionMove selectionMove = mover.getDestinationCardsSelectionMove();
+		assertFalse(selectionMove.canSelectDestinationCards(badSelections),
+				"Should not be able to select a destination card that was not drawn");
+		
+		try {
+			selectionMove.selectDestinationCards(badSelections);
+			fail("Selecting a destination card that is not one of the options should throw an exception");
+		}
+		catch(IllegalMoveException e) {} //do nothing
 	}
 	
 	@Test
@@ -211,6 +378,10 @@ class MoverTest {
 			//Do nothing
 		}
 	}
+	
+	///////////////////////////////////////////////////////////////////////////////
+	//	TRANSPORTATION CARD DRAWING MOVES
+	///////////////////////////////////////////////////////////////////////////////
 
 	@Test
 	public void testDrawTransportationCard() {
@@ -221,6 +392,11 @@ class MoverTest {
 	public void testCanDrawTransportationCard() {
 		fail("Not yet implemented");
 	}
+	
+
+	///////////////////////////////////////////////////////////////////////////////
+	//	ROUTE CLAIMING MOVES
+	///////////////////////////////////////////////////////////////////////////////
 
 	@Test
 	public void testBuildConnection() {
