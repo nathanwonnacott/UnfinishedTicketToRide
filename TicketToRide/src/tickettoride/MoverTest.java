@@ -275,7 +275,7 @@ class MoverTest {
 									same(mockedPlayer), 
 									selectedDestinationCardsCaptor.capture());
 		
-		//Note that it's possilbe that the mover implementation will call
+		//Note that it's possible that the mover implementation will call
 		//addDestinationCardsToPlayersHand once will all of the values, or
 		//call it once per value. The line below will get all of the calls
 		//to that method and combine all of the arguments into one collection
@@ -289,7 +289,11 @@ class MoverTest {
 		
 		//Now check that the non-selected cards were added to the bottom
 		//of the deck
-		verify(mockedGameState)
+		//Note that we allow as few as 0 invocations here to handle the case where all of the
+		//cards were selected. We'll be checking the arguments via the captor though, so if
+		//an invocation was needed here but it was never invoked, then we'll still catch the
+		//error below after we inspect the arguments
+		verify(mockedGameState, atLeast(0))
 			.placeDestinationCardsAtBottomOfDeck(destinationCardsReturnedToDeckCaptor.capture());
 		
 		Collection<DestinationCard> allDestinationCardsAddedBackToDeck =
