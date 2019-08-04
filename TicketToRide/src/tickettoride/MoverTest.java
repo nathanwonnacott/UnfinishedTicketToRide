@@ -103,12 +103,21 @@ class MoverTest {
 	private ObservableBooleanValue turnCompleteBinding;
 	
 	/**
-	 * Capturing argument for collections of destination cards. Note, Captors for
+	 * Capturing argument for selected destination cards. Note, Captors for
 	 * generic types have to be declared as member variables like this in order
 	 * to be typesafe.
 	 */
 	@Captor
-	private ArgumentCaptor<Collection<DestinationCard>> destinationCardsCaptor;
+	private ArgumentCaptor<Collection<DestinationCard>> selectedDestinationCardsCaptor;
+	
+
+	/**
+	 * Capturing argument for destination cards that were returned to the bottom of
+	 * the deck. Note, Captors for generic types have to be declared as member variables 
+	 * like this in order to be typesafe.
+	 */
+	@Captor
+	private ArgumentCaptor<Collection<DestinationCard>> destinationCardsReturnedToDeckCaptor;
 	
 	@BeforeEach
 	public void setup() {
@@ -214,7 +223,7 @@ class MoverTest {
 		assertThat(
 				"Destination card selection options should be the 3 returned from the deck",
 				selectionMove.getDestinationCardOptions(),
-				containsInAnyOrder(expectedDestinationOptions));
+				containsInAnyOrder(expectedDestinationOptions.toArray()));
 		
 		
 		testCardSelection(selectionMove, expectedDestinationOptions, numCardsToSelect);
@@ -231,7 +240,7 @@ class MoverTest {
 		assertThat(
 				"Destination card selection options should be the 3 returned from the deck",
 				selectionMove.getDestinationCardOptions(),
-				containsInAnyOrder(expectedDestinationOptions));
+				containsInAnyOrder(expectedDestinationOptions.toArray()));
 		
 		
 		testCardSelection(selectionMove, expectedDestinationOptions, numCardsToSelect);
@@ -263,34 +272,34 @@ class MoverTest {
 		
 		
 		verify(mockedGameState).addDestinationCardsToPlayersHand(
-									mockedPlayer, 
-									destinationCardsCaptor.capture());
+									same(mockedPlayer), 
+									selectedDestinationCardsCaptor.capture());
 		
 		//Note that it's possilbe that the mover implementation will call
 		//addDestinationCardsToPlayersHand once will all of the values, or
 		//call it once per value. The line below will get all of the calls
 		//to that method and combine all of the arguments into one collection
 		Collection<DestinationCard> allDestinationCardsDrawn =
-				destinationCardsCaptor.getAllValues()
+				selectedDestinationCardsCaptor.getAllValues()
 										.stream()
 										.flatMap(x -> x.stream())
 										.collect(Collectors.toList());
 		assertThat(allDestinationCardsDrawn,
-				containsInAnyOrder(cardsToSelect));
+				containsInAnyOrder(cardsToSelect.toArray()));
 		
 		//Now check that the non-selected cards were added to the bottom
 		//of the deck
 		verify(mockedGameState)
-			.placeDestinationCardsAtBottomOfDeck(destinationCardsCaptor.capture());
+			.placeDestinationCardsAtBottomOfDeck(destinationCardsReturnedToDeckCaptor.capture());
 		
 		Collection<DestinationCard> allDestinationCardsAddedBackToDeck =
-				destinationCardsCaptor.getAllValues()
+				destinationCardsReturnedToDeckCaptor.getAllValues()
 										.stream()
 										.flatMap(x -> x.stream())
 										.collect(Collectors.toList());
 		
 		assertThat(allDestinationCardsAddedBackToDeck,
-				containsInAnyOrder(cardsNotSelected));
+				containsInAnyOrder(cardsNotSelected.toArray()));
 		
 		assertTrue(turnCompleteBinding.get(),
 				"Turn should be complete after destination cards are selected");
