@@ -12,18 +12,24 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import tickettoride.Mover.DestinationCardSelectionMove;
 import tickettoride.Mover.IllegalMoveException;
 import tickettoride.model.GameDefinition.DestinationCard;
@@ -102,6 +108,24 @@ class MoverTest {
 	 */
 	private ObservableBooleanValue turnCompleteBinding;
 	
+	/** Observable list of face up transportation card colors (to be returned by the mocked game state).
+	 * Note that there is no significance about the initial actual values of the cards except that there
+	 * are no wilds. */
+	private ObservableList<CardColor> faceUpTransportationCards = FXCollections.observableArrayList(
+			CardColor.BLUE,
+			CardColor.GREEN,
+			CardColor.YELLOW,
+			CardColor.YELLOW,
+			CardColor.PURPLE
+			);
+	
+	/** Color of the transportation card on top of the deck */
+	private CardColor transportationCardDeckTopColor = CardColor.RED;
+	
+	/** Observable boolean indicating if cards are remaining in the transportation card deck.
+	 * To be returned by the mocked game state */
+	private SimpleBooleanProperty transportationCardDeckRemaining = new SimpleBooleanProperty(true);
+	
 	/**
 	 * Capturing argument for selected destination cards. Note, Captors for
 	 * generic types have to be declared as member variables like this in order
@@ -140,6 +164,19 @@ class MoverTest {
 		when(mockedGameState.getDestinationCardsDeckRemainingProperty())
 			.thenReturn(destinationCardsRemainingProperty);
 		when(mockedGameState.drawDestinationCards()).thenReturn(expectedDestinationOptions);
+		when(mockedGameState.getFaceUpTransportationCards()).thenReturn(faceUpTransportationCards);
+		when(mockedGameState.getTransportationCardsDeckRemainingProperty()).thenReturn(transportationCardDeckRemaining);
+		
+		when(mockedGameState.drawTransportationCard(anyInt())).thenAnswer(invocation -> {
+			Integer index = invocation.getArgumentAt(0, Integer.class);
+			if(index == 5) {
+				return transportationCardDeckTopColor;
+			}
+			else {
+				return faceUpTransportationCards.get(index);
+			}
+			
+		});
 		
 		//Set up mocked map
 		when(mockedMapData.getDestinations())
@@ -425,15 +462,188 @@ class MoverTest {
 	//	TRANSPORTATION CARD DRAWING MOVES
 	///////////////////////////////////////////////////////////////////////////////
 
-	@Test
-	public void testDrawTransportationCard() {
-		fail("Not yet implemented");
+	@ParameterizedTest(name = "Test can't draw transportation card # {0} on first move")
+	@ValueSource(ints = {0, 5})
+	public void testCantDrawTransportationCardOnFirstTurn(int cardIndex) {
+		setupForFirstMove();
+		assertFalse(mover.canDrawTransportationCard(cardIndex),
+				"Can't draw transportation card on first turn");
+		
+		try {
+			mover.drawTransportationCard(cardIndex);
+			fail("Should throw exception when trying to draw a transportation card on firtst turn");
+		}
+		catch(IllegalMoveException e) {};
+		
 	}
 
-	@Test
-	public void testCanDrawTransportationCard() {
-		fail("Not yet implemented");
+	@ParameterizedTest(name = "Test can't draw transportation card # {0} after beginning a destination card move")
+	@ValueSource(ints = {0, 5})
+	public void testCantDrawTransportationCardAfterDrawingDestinationCard(int cardIndex) {
+		mover.getDestinationCardsSelectionMove();
+		
+		assertCantDrawTransportationCard("after beginning a destination card draw move", cardIndex);
 	}
+	
+	@ParameterizedTest(name = "Test can't draw transportation card # {0} after claiming a route")
+	@ValueSource(ints = {0, 5})
+	public void testCantDrawTransportationCardAfterClaimingRoute(int cardIndex) {
+		this.claimConnection();
+		
+		assertCantDrawTransportationCard("after claiming a route", cardIndex);
+	}
+	
+	@ParameterizedTest(name = "Test can't draw transportation card # {0} after already drawing 2 transportation cards")
+	@ValueSource(ints = {0, 5})
+	public void testCantDrawTransportationCardAfterDrawingTwoTransportationCards(int cardIndex) {
+		mover.drawTransportationCard(2);
+		mover.drawTransportationCard(5);
+		
+		assertCantDrawTransportationCard("after already drawing 2 transportation cards", cardIndex);
+	}
+	
+	@ParameterizedTest(name = "Test can't draw transportation card # {0} when there is not card there")
+	@ValueSource(ints = {0, 1, 2, 3, 4, 5})
+	public void testCantDrawCardsWhenCardsAreDepleted(int cardIndex) {
+		if(cardIndex < 5) {
+			faceUpTransportationCards.set(cardIndex, null);
+			assertCantDrawTransportationCard("when the card is not present", cardIndex);
+		}
+		else {
+			transportationCardDeckRemaining.set(false);
+			assertCantDrawTransportationCard("when the deck is depleted", cardIndex);
+		}
+	}
+	
+	@Test
+	public void testDrawingFaceUpWildAsFirstCard() {
+		final int cardIndex = 3;
+		faceUpTransportationCards.set(cardIndex, CardColor.ANY);
+		
+		mover.drawTransportationCard(cardIndex);
+		
+		assertCantDrawTransportationCard("after drawing a face up wild card", 2);
+	}
+	
+	/**
+	 * Asserts that {@link Mover#canDrawTransportationCard} returns false and
+	 * {@link Mover#drawTransportationCard} throws an exception when trying
+	 * to draw the specified card.
+	 * @param description description of the state of the game which should
+	 * cause the card to not be drawalbe (for showing up in assert statements)
+	 * @param cardIndex the index (0-5) of the card to draw.
+	 */
+	private void assertCantDrawTransportationCard(String description, int cardIndex) {
+		assertFalse(mover.canDrawTransportationCard(cardIndex),
+				"Can't draw transportation card " + cardIndex + " " + description);
+		
+		try {
+			mover.drawTransportationCard(cardIndex);
+			fail("Should throw exception when trying to draw a transportation card " + cardIndex + " "
+					+ description);
+		}
+		catch(IllegalMoveException e) {};
+	}
+	
+	
+	@ParameterizedTest(name = "Test draw wild from deck and then draw index {0}")
+	@ValueSource(ints = {0, 5})
+	public void testDrawingWildFromDeckAndSecondCard(int cardIndex) {
+		
+		//Draw wild from deck
+		when(mockedGameState.drawTransportationCard(5)).thenReturn(CardColor.ANY);
+		mover.drawTransportationCard(5);
+		
+		//Now make sure we can draw another card
+		assertTrue(mover.canDrawTransportationCard(cardIndex), 
+				"Should be able to draw second card after drawing a wild from the deck");
+
+		mover.drawTransportationCard(cardIndex);
+	}
+	
+	@ParameterizedTest(name = "Draw 2 non-wild cards. Indices: {0}, {1}")
+	@MethodSource("draw2CardsArgumentProvider")
+	public void testDraw2NonWildTransportationCards(int firstCardIndex, int secondCardIndex) {
+		
+		assertFalse(turnCompleteBinding.getValue(),
+				"Turn should not be complete prior to doing anything");
+		
+		
+		CardColor card1 = testSingleTransportationCardDraw(firstCardIndex);
+		assertFalse(turnCompleteBinding.getValue(),
+				"Turn should not be complete after only drawing 1 transportation card");
+		
+		//Replace whatever card with a different card just to make sure that the second
+		//draw on duplicate indices is resulting in a new card color (which may or may not
+		//actually be the same color)
+		if(firstCardIndex < 5) {
+			faceUpTransportationCards.set(firstCardIndex, CardColor.GREEN);
+		}
+		else {
+			transportationCardDeckTopColor = CardColor.GREEN;
+		}
+		
+		CardColor card2 = testSingleTransportationCardDraw(secondCardIndex);
+		assertTrue(turnCompleteBinding.getValue(),
+				"Turn should be complete after drawing 2 destination cards");
+		
+		//Verify all interactions with the game state
+		
+		if(firstCardIndex == secondCardIndex) {
+			verify(mockedGameState, times(2)).drawTransportationCard(firstCardIndex);
+		}
+		else {
+			verify(mockedGameState).drawTransportationCard(firstCardIndex);
+			verify(mockedGameState).drawTransportationCard(secondCardIndex);
+		}
+		
+		if(card1 == card2) {
+			verify(mockedGameState, times(2)).addTransportationCardToPlayersHand(mockedPlayer, card1);
+		}
+		else {
+			verify(mockedGameState).addTransportationCardToPlayersHand(mockedPlayer, card1);
+			verify(mockedGameState).addTransportationCardToPlayersHand(mockedPlayer, card2);
+		}
+		
+	}
+	
+	/** utility method to test a single successful transportation card draw.
+	 * @return the color of the card that was drawn*/
+	private CardColor testSingleTransportationCardDraw(int index) {
+		
+		assertTrue(mover.canDrawTransportationCard(index),
+				"Drawing card at index " + index + " should be allowed");
+		
+		CardColor expectedColor = index < 5 ?
+						faceUpTransportationCards.get(index) :
+							transportationCardDeckTopColor;
+						
+		assertEquals(expectedColor, mover.drawTransportationCard(index));
+		
+		return expectedColor;
+	}
+	
+	/** Provides arguments used in {@link #testDraw2NonWildTransportationCards} */
+	private static Stream<Arguments> draw2CardsArgumentProvider() {
+		return Stream.of(
+				//Try each face up card
+				Arguments.of(0,1),
+				Arguments.of(2,3),
+				Arguments.of(3,4),
+				//Check face up and drawing from the deck combos
+				Arguments.of(1,5),
+				Arguments.of(5,1),
+				//Check drawing from the same spot twice. Once with
+				//green (which is significant because the test replaces
+				//the card with green, so we'll get the same color twice
+				//in a row) and one with a different color.
+				Arguments.of(1,1),
+				Arguments.of(3,3),
+				//Check drawing both from the deck
+				Arguments.of(5,5)
+				);
+	}
+	
 	
 
 	///////////////////////////////////////////////////////////////////////////////

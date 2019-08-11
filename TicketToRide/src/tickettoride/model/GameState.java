@@ -79,6 +79,18 @@ public class GameState {
 	}
 	
 	/**
+	 * Removes and returns the transportation card at the specified index.
+	 * If the index indicates a face-up transportation card, then the card at
+	 * that index will be replaced by a card from the deck (unless the deck is
+	 * empty).
+	 * @param cardIndex the index of the card to draw (5 means from the deck)
+	 * @return the color of the card that was drawn
+	 */
+	public CardColor drawTransportationCard(int cardIndex) {
+		return CardColor.BLUE;
+	}
+	
+	/**
 	 * Places the specified destination cards at the bottom of the deck
 	 * @param cards cards to be placed at the bottom of the deck
 	 */
@@ -106,6 +118,15 @@ public class GameState {
 	 */
 	public ObservableMap<CardColor, Integer> getPlayersTransportationCardsHand(Player player) {
 		return null;
+	}
+	
+	/**
+	 * Adds the specified transportation to the specified player's hand
+	 * @param player the play to whose hand the card should be added
+	 * @param color the color of the destination card to be added to the player's hand
+	 */
+	public void addTransportationCardToPlayersHand(Player player, CardColor color) {
+		
 	}
 	
 	
