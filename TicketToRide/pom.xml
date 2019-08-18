@@ -23,6 +23,14 @@
           <target>12</target>
         </configuration>
       </plugin>
+      <plugin>
+    	<groupId>org.openjfx</groupId>
+    	<artifactId>javafx-maven-plugin</artifactId>
+    	<version>0.0.3</version>
+    	<configuration>
+    		<mainClass>tickettoride.ui.TicketToRide</mainClass>
+    	</configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
