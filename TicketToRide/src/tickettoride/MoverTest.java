@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -650,19 +651,137 @@ class MoverTest {
 	//	ROUTE CLAIMING MOVES
 	///////////////////////////////////////////////////////////////////////////////
 
+	@ParameterizedTest(name = "Build connection of length {0}, color {1}")
+	@MethodSource("testBuildNonGreyConnectionArgumentProvider")
+	public void testBuildNonGreyConnection(int num, CardColor color) {
+		
+		Collection<CardColor> cardsToUse = Collections.nCopies(num, color);
+		
+		when(mockedConnection1to2.getNumSegments()).thenReturn(num);
+		when(mockedConnection1to2.getColor()).thenReturn(color);
+		
+		checkBuildConnection(mockedConnection1to2, cardsToUse);
+	}
+	
+	/** Provides arguments used in {@link #testBuildNonGreyConnection} */
+	private static Stream<Arguments> testBuildNonGreyConnectionArgumentProvider() {
+		//We'll do every combination of length 1-5 connections with every color
+		//except for ANY
+		return numAndColorArgumentProvider()
+					.filter(a -> a.get()[1] != CardColor.ANY);
+	}
+	
+	@ParameterizedTest(name = "Build connection of length {0}, with cards colored {1}")
+	@MethodSource("numAndColorArgumentProvider")
+	public void testBuildGreyConnection(int num, CardColor color) {
+		Collection<CardColor> cardsToUse = Collections.nCopies(num, color);
+
+		when(mockedConnection1to2.getNumSegments()).thenReturn(num);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.ANY);
+		
+		checkBuildConnection(mockedConnection1to2, cardsToUse);
+	}
+	
+	/** Provides arguments consisting of combinations of connection lengths and colors */
+	private static Stream<Arguments> numAndColorArgumentProvider() {
+		//We'll do every combination of length 1-3 connections with every color
+		return IntStream.range(1, 4)
+				.mapToObj(i->i)
+				.flatMap(i ->
+						Arrays.stream(CardColor.values())
+								.map(c -> Arguments.of(i, c)));
+	}
+	
 	@Test
-	public void testBuildConnection() {
+	public void testBuildOnDoubleConnection() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testBuildConnectionWithWilds() {
+		fail("Not yet implemented");
+	}
+	
+	
+	/**
+	 * Utility method used by all tests that check for a successful building of a connection
+	 * @param connectionToBuild
+	 * @param cardsToUse
+	 */
+	private void checkBuildConnection(Connection connectionToBuild, Collection<CardColor> cardsToUse) {
+		//TODO
+		fail("Didn't work");
+		
+	}
+
+	@Test
+	public void testCanBuildStandardConnection() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCanBuildGreyConnection() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCanBuildConnectionWithWild() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testCanBuildConnection() {
+	public void testCantBuildConnectionWithWrongColor() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testGetTurnCompletedBinding() {
+	public void testCantBuildConnectionWithTooFewCards() {
+		fail("Not yet implemented");
+	}
+	
+
+	@Test
+	public void testCantBuildConnectionThatIsAlreadyClaimed() {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testCantBuildConnectionOnSecondPathOfDoubleIn2PlayerGame() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCantClaimBothConnectionsOnDoublePath() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testCantBuildConnectionWithCardsThePlayerDoesntHave() {
+		fail("Not yet implemented");
+	}	
+	
+	@Test
+	public void testCantBuildConnectionIfPlayerIsOutOfTrains() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCantBuildConnectionIfConnectionDoesNotExist() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCantBuidConnectionOnFirstTurn() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCantBuildConnectionIfPlayerHasAlreadyStartedDestCardDrawMove() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testCantBuildConnectionIfPlayerHasAlreadyDrawnATransportationCard() {
+		fail("Not yet implemented");
+	}
 }
