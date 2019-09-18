@@ -61,6 +61,14 @@ public class GameState {
 		return gameDefinition;
 	}
 	
+	/**
+	 * @return the players in the game
+	 */
+	public Collection<Player> getPlayers() {
+		//TODO
+		return null;
+	}
+	
 	public ObservableBooleanValue getTransportationCardsDeckRemainingProperty() {
 		return new SimpleBooleanProperty(true);
 	}
@@ -131,6 +139,15 @@ public class GameState {
 	
 	
 	/**
+	 * Removes the specified cards from the specified player's hand
+	 * @param player
+	 * @param cardsToRemove
+	 */
+	public void removeTransportationCardsFromPlayersHand(Player player, Collection<CardColor> cardsToRemove) {
+		
+	}
+	
+	/**
 	 * Returns an observable set of destination cards that the specified
 	 * player has in its hand. 
 	 * @param player The player in whose hand we want.
@@ -156,6 +173,16 @@ public class GameState {
 	 */
 	public ObservableMap<Player, Integer> getNumTrainsRemaining() {
 		return null;
+	}
+	
+	/**
+	 * Uses the specified number of train pieces from the player (decrements
+	 * that players number of unused train pieces).
+	 * @param player
+	 * @param numTrains
+	 */
+	public void useTrains(Player player, int numTrains) {
+		
 	}
 
 }

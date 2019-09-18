@@ -10,6 +10,9 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -28,9 +31,12 @@ import org.mockito.MockitoAnnotations;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.util.Pair;
 import tickettoride.Mover.DestinationCardSelectionMove;
 import tickettoride.Mover.IllegalMoveException;
 import tickettoride.model.GameDefinition.DestinationCard;
@@ -161,6 +167,8 @@ class MoverTest {
 		//using in the tests.
 		//The wiki page for the Mover implementation and testing phase explains in
 		//more detail how mocked objects work.
+		when(mockedGameState.getPlayers())
+			.thenReturn(List.of(mockedPlayer, mock(Player.class), mock(Player.class)));
 		when(mockedGameState.getMap()).thenReturn(mockedMapData);
 		when(mockedGameState.getDestinationCardsDeckRemainingProperty())
 			.thenReturn(destinationCardsRemainingProperty);
@@ -215,6 +223,36 @@ class MoverTest {
 		//Also note that if you create a new instance of a Mover here, then you'll also
 		//need to update turnCompleteBinding
 		
+	}
+	
+	
+	/**
+	 * Sets the map connections to only contain a double connection from {@link #mockedDestination1} to
+	 * {@link #mockedDestination2}. Any other connections will be removed from the map
+	 * @param color1 The color of the first connection
+	 * @param color2 the color of the second connection
+	 * @param num the number of path segments in the connection
+	 * @return pair of the newly created connection mocked objects
+	 */
+	private Pair<Connection, Connection> setupDoubleConnectionFrom1to2(CardColor color1, CardColor color2, int num) {
+		
+		Connection conn1 = mock(Connection.class);
+		Connection conn2 = mock(Connection.class);
+		
+		when(mockedMapData.getConnections())
+			.thenReturn(Set.of(conn1, conn2));
+		
+		when(mockedMapData.getConnectionsToOrFromDest(
+				or(same(mockedDestination1), 
+						same(mockedDestination2))))
+			.thenReturn(Set.of(conn1, conn2));
+		
+		
+		Stream.of(conn1, conn2).forEach(c -> when(c.getNumSegments()).thenReturn(num));
+		when(conn1.getColor()).thenReturn(color1);
+		when(conn2.getColor()).thenReturn(color2);
+		return new Pair<>(conn1, conn2);
+
 	}
 	
 
@@ -692,14 +730,40 @@ class MoverTest {
 								.map(c -> Arguments.of(i, c)));
 	}
 	
+	/**
+	 * Tests that you can build on the "first" connection in a double connection. Note that
+	 * double connections don't really have a true concept of first and second, but we just
+	 * want to make sure that it works on each.
+	 */
 	@Test
-	public void testBuildOnDoubleConnection() {
-		fail("Not yet implemented");
+	public void testBuildOnFirstDoubleConnection() {
+		Pair<Connection, Connection> connections = 
+				this.setupDoubleConnectionFrom1to2(CardColor.BLUE, CardColor.ORANGE, 3);
+		
+		checkBuildConnection(connections.getKey(), Collections.nCopies(3, CardColor.BLUE));
+	}
+	
+	/**
+	 * Tests that you can build on the "second" connection in a double connection. Note that
+	 * double connections don't really have a true concept of first and second, but we just
+	 * want to make sure that it works on each.
+	 */
+	@Test
+	public void testBuildOnSecondDoubleConnection() {
+		Pair<Connection, Connection> connections = 
+				this.setupDoubleConnectionFrom1to2(CardColor.BLUE, CardColor.ORANGE, 3);
+		
+		checkBuildConnection(connections.getValue(), Collections.nCopies(3, CardColor.ORANGE));
 	}
 	
 	@Test
 	public void testBuildConnectionWithWilds() {
-		fail("Not yet implemented");
+
+		when(mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.BLUE);
+		
+		checkBuildConnection(mockedConnection1to2,
+				List.of(CardColor.BLUE, CardColor.ANY, CardColor.ANY));
 	}
 	
 	
@@ -709,79 +773,237 @@ class MoverTest {
 	 * @param cardsToUse
 	 */
 	private void checkBuildConnection(Connection connectionToBuild, Collection<CardColor> cardsToUse) {
-		//TODO
-		fail("Didn't work");
+		
+		//Make mocked game state indicate that the player has enough cards in his hand
+		ObservableMap<CardColor, Integer> playersHand = 
+				convertCardsCollectionToCardCountsMap(cardsToUse);
+		
+		
+		
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(playersHand);
+		
+		mover.buildConnection(connectionToBuild, cardsToUse);
+		
+		verify(connectionToBuild).claim(mockedPlayer);
+		verify(mockedGameState).useTrains(mockedPlayer, connectionToBuild.getNumSegments());
+		verify(mockedGameState).removeTransportationCardsFromPlayersHand(mockedPlayer, cardsToUse);
+		
 		
 	}
 
 	@Test
 	public void testCanBuildStandardConnection() {
-		fail("Not yet implemented");
+		when(mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.GREEN);
+		
+		assertTrue(mover.canBuildConnection(mockedConnection1to2, 
+											Collections.nCopies(3, CardColor.GREEN)));
 	}
 	
 	@Test
 	public void testCanBuildGreyConnection() {
-		fail("Not yet implemented");
+		when(mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.ANY);
+		
+		assertTrue(mover.canBuildConnection(mockedConnection1to2, 
+											Collections.nCopies(3, CardColor.PURPLE)));
+	}
+	
+	@Test
+	public void testCanBuildGreyConnectionWithPartialWildCards() {
+		when(mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.ANY);
+		
+		assertTrue(mover.canBuildConnection(mockedConnection1to2, 
+											List.of(CardColor.ANY, CardColor.BLUE, CardColor.ANY)));
 	}
 	
 	@Test
 	public void testCanBuildConnectionWithWild() {
-		fail("Not yet implemented");
+		when(mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.BLACK);
+		
+		assertTrue(mover.canBuildConnection(mockedConnection1to2, 
+											List.of(CardColor.ANY, CardColor.BLUE, CardColor.ANY)));
 	}
+	
+
 
 	@Test
 	public void testCantBuildConnectionWithWrongColor() {
-		fail("Not yet implemented");
+		testCantBuildConnectionAfterSettingUpState(4, CardColor.WHITE, Collections.nCopies(4,  CardColor.ORANGE));
+	}
+
+
+	@Test
+	public void testCantBuildGreyConnectionWithMismatchedCards() {
+		testCantBuildConnectionAfterSettingUpState(2, CardColor.ANY, List.of(CardColor.GREEN, CardColor.BLUE));
 	}
 
 	@Test
 	public void testCantBuildConnectionWithTooFewCards() {
-		fail("Not yet implemented");
+		testCantBuildConnectionAfterSettingUpState(4, CardColor.PURPLE, Collections.nCopies(3,  CardColor.PURPLE));
 	}
 	
 
 	@Test
 	public void testCantBuildConnectionThatIsAlreadyClaimed() {
-		fail("Not yet implemented");
+		when(mockedConnection1to2.getNumSegments()).thenReturn(2);
+		when(mockedConnection1to2.getColor()).thenReturn(CardColor.RED);
+		when(mockedConnection1to2.getOwnerProperty())
+			.thenReturn(new SimpleObjectProperty<>(mock(Player.class)));
+		testCantBuildConnection(mockedConnection1to2, Collections.nCopies(2,  CardColor.RED));
 	}
 
 	@Test
 	public void testCantBuildConnectionOnSecondPathOfDoubleIn2PlayerGame() {
-		fail("Not yet implemented");
+		//Set to only 2 players
+		Player otherPlayer = mock(Player.class);
+		when(mockedGameState.getPlayers())
+			.thenReturn(List.of(mockedPlayer, otherPlayer));
+		
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(FXCollections.observableMap(Map.of(CardColor.ORANGE, 2)));
+		
+		Pair<Connection, Connection> connections = 
+				this.setupDoubleConnectionFrom1to2(CardColor.BLUE, CardColor.ORANGE, 2);
+		
+		//Make the blue one already claimed
+		when(connections.getKey().getOwnerProperty()).thenReturn(new SimpleObjectProperty<>(otherPlayer));
+		
+		testCantBuildConnection(connections.getValue(), Collections.nCopies(2,  CardColor.ORANGE));
 	}
 	
 	@Test
 	public void testCantClaimBothConnectionsOnDoublePath() {
-		fail("Not yet implemented");
+		
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(FXCollections.observableMap(Map.of(CardColor.ORANGE, 2)));
+		
+		Pair<Connection, Connection> connections = 
+				this.setupDoubleConnectionFrom1to2(CardColor.BLUE, CardColor.ORANGE, 2);
+		
+		//Make the blue one already claimed by this same player
+		when(connections.getKey().getOwnerProperty()).thenReturn(new SimpleObjectProperty<>(mockedPlayer));
+		
+		testCantBuildConnection(connections.getValue(), Collections.nCopies(2,  CardColor.ORANGE));
 	}
 
 	@Test
 	public void testCantBuildConnectionWithCardsThePlayerDoesntHave() {
-		fail("Not yet implemented");
+		//Set up some hand that doesn't have 3 red cards
+		//Note that this hand has 4 wilds, so it could actually build this connection, but
+		//not with the 3 red cards that we're going to specify
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(FXCollections.observableMap(Map.of(CardColor.ORANGE, 2, CardColor.ANY, 4)));
+	
+		when(this.mockedConnection1to2.getNumSegments()).thenReturn(3);
+		when(this.mockedConnection1to2.getColor()).thenReturn(CardColor.RED);
+
+		testCantBuildConnection(mockedConnection1to2, Collections.nCopies(3,  CardColor.RED));
 	}	
 	
 	@Test
-	public void testCantBuildConnectionIfPlayerIsOutOfTrains() {
-		fail("Not yet implemented");
+	public void testCantBuildConnectionIfPlayerDoesntHaveEnoughTrains() {
+		when(mockedGameState.getNumTrainsRemaining())
+			.thenReturn(FXCollections.observableMap(
+					Map.of(mockedPlayer, 4)));
+		
+		testCantBuildConnectionAfterSettingUpState(5, CardColor.PURPLE, Collections.nCopies(5, CardColor.PURPLE));
 	}
 	
 	@Test
 	public void testCantBuildConnectionIfConnectionDoesNotExist() {
-		fail("Not yet implemented");
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(FXCollections.observableMap(Map.of(CardColor.ORANGE, 2)));
+		
+		//Create a connection that is not in the map
+		Connection mockedConnection = mock(Connection.class);
+		when(mockedConnection.getNumSegments()).thenReturn(2);
+		when(mockedConnection.getColor()).thenReturn(CardColor.ORANGE);
+
+		testCantBuildConnection(mockedConnection, Collections.nCopies(2,  CardColor.ORANGE));
 	}
 	
 	@Test
 	public void testCantBuidConnectionOnFirstTurn() {
-		fail("Not yet implemented");
+		setupForFirstMove();
+		testCantBuildConnectionAfterSettingUpState(1, CardColor.BLUE, Collections.singleton(CardColor.BLUE));
 	}
 	
 	@Test
 	public void testCantBuildConnectionIfPlayerHasAlreadyStartedDestCardDrawMove() {
-		fail("Not yet implemented");
+		mover.getDestinationCardsSelectionMove();
+		testCantBuildConnectionAfterSettingUpState(1, CardColor.ORANGE, Collections.singleton(CardColor.ORANGE));
 	}
 	
 	@Test
 	public void testCantBuildConnectionIfPlayerHasAlreadyDrawnATransportationCard() {
-		fail("Not yet implemented");
+		mover.drawTransportationCard(0);
+		testCantBuildConnectionAfterSettingUpState(1, CardColor.PURPLE, Collections.singleton(CardColor.PURPLE));
+	}
+	
+	/**
+	 * Converts a collection of cards to the observable map from cards to card counts that
+	 * is used in the game state in {@link GameState#getPlayersTransportationCardsHand(Player)}
+	 * @param cards
+	 * @return
+	 */
+	private ObservableMap<CardColor, Integer> convertCardsCollectionToCardCountsMap(
+			Collection<CardColor> cards) {
+		return cards.stream()
+					.collect(
+							Collectors.toMap(
+										x -> x,
+										x -> 1,
+										(x, y) -> x + y,
+										() -> FXCollections.observableMap(new HashMap<>())));
+	}
+	
+	/**
+	 * Sets up the game state such that the game map has a connection with the specified 
+	 * color and length and such that the player has the specified cards and ensures that
+	 * the connection still cannot be built (via {@link #testCantBuildConnection(Connection, Collection)}
+	 * @param numSegments
+	 * @param connectionColor
+	 * @param cardsToUse
+	 */
+	private void testCantBuildConnectionAfterSettingUpState(int numSegments, CardColor connectionColor,
+											Collection<CardColor> cardsToUse) {
+		Connection mockedConnection = mock(Connection.class);
+		when(mockedConnection.getNumSegments()).thenReturn(numSegments);
+		when(mockedConnection.getColor()).thenReturn(connectionColor);
+		
+		when(mockedConnection.getStart()).thenReturn(this.mockedDestination1);
+		when(mockedConnection.getEnd()).thenReturn(this.mockedDestination2);
+		
+		when(mockedMapData.getConnections()).thenReturn(Collections.singleton(mockedConnection));
+		when(mockedMapData.getConnectionsToOrFromDest(any()))
+			.thenReturn(Collections.singleton(mockedConnection));
+		
+		when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer))
+			.thenReturn(convertCardsCollectionToCardCountsMap(cardsToUse));
+		
+		testCantBuildConnection(mockedConnection, cardsToUse);
+	}
+	
+	/**
+	 * Asserts that the specified connection cannot be built with the specified 
+	 * cards. First checks via {@link Mover#canBuildConnection(Connection, Collection)}
+	 * and then attempts to actually build the connection and asserts that an error is
+	 * thrown.
+	 * @param connection
+	 * @param cardsToUse
+	 */
+	private void testCantBuildConnection(Connection connection, Collection<CardColor> cardsToUse) {
+		
+		assertFalse(mover.canBuildConnection(connection,  cardsToUse));
+		
+		try {
+			mover.buildConnection(connection, cardsToUse);
+			fail("Expected mover.buildConnection to throw exception, but no exception thrown");
+		}
+		catch(IllegalMoveException e) {}
 	}
 }
