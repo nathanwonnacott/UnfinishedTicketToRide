@@ -159,7 +159,7 @@ class MoverTest {
 		//The mover should use a reference to mockedGameState as it's game state.
 		
 		
-		turnCompleteBinding = mover.getTurnCompletedBinding();
+		//turnCompleteBinding = mover.getTurnCompletedBinding();
 		//Set up mocked methods for the game state.
 		//A mocked object is a fake object used for testing purposes. We're using a
 		//framework called mockito to instantiate a fake instance of GameState
@@ -435,7 +435,7 @@ class MoverTest {
 		catch(IllegalMoveException e) {} //do nothing
 	}
 	
-	@ParameterizedTest(name = "Test can't draw destination cards after {0} train cards are drawn")
+	@ParameterizedTest(name = "Test cannot draw destination cards after {0} train cards are drawn")
 	@ValueSource(ints = {1, 2})
 	public void testCantDrawDestinationCardsAfterTrainCardsAreDrawn(int numTrainCardsDrawn) {
 		mover.drawTransportationCard(1);
@@ -501,7 +501,7 @@ class MoverTest {
 	//	TRANSPORTATION CARD DRAWING MOVES
 	///////////////////////////////////////////////////////////////////////////////
 
-	@ParameterizedTest(name = "Test can't draw transportation card # {0} on first move")
+	@ParameterizedTest(name = "Test cannot draw transportation card # {0} on first move")
 	@ValueSource(ints = {0, 5})
 	public void testCantDrawTransportationCardOnFirstTurn(int cardIndex) {
 		setupForFirstMove();
@@ -516,7 +516,7 @@ class MoverTest {
 		
 	}
 
-	@ParameterizedTest(name = "Test can't draw transportation card # {0} after beginning a destination card move")
+	@ParameterizedTest(name = "Test cannot draw transportation card # {0} after beginning a destination card move")
 	@ValueSource(ints = {0, 5})
 	public void testCantDrawTransportationCardAfterDrawingDestinationCard(int cardIndex) {
 		mover.getDestinationCardsSelectionMove();
@@ -524,7 +524,7 @@ class MoverTest {
 		assertCantDrawTransportationCard("after beginning a destination card draw move", cardIndex);
 	}
 	
-	@ParameterizedTest(name = "Test can't draw transportation card # {0} after claiming a route")
+	@ParameterizedTest(name = "Test cannot draw transportation card # {0} after claiming a route")
 	@ValueSource(ints = {0, 5})
 	public void testCantDrawTransportationCardAfterClaimingRoute(int cardIndex) {
 		this.claimConnection();
@@ -532,7 +532,7 @@ class MoverTest {
 		assertCantDrawTransportationCard("after claiming a route", cardIndex);
 	}
 	
-	@ParameterizedTest(name = "Test can't draw transportation card # {0} after already drawing 2 transportation cards")
+	@ParameterizedTest(name = "Test cannot draw transportation card # {0} after already drawing 2 transportation cards")
 	@ValueSource(ints = {0, 5})
 	public void testCantDrawTransportationCardAfterDrawingTwoTransportationCards(int cardIndex) {
 		mover.drawTransportationCard(2);
@@ -541,7 +541,7 @@ class MoverTest {
 		assertCantDrawTransportationCard("after already drawing 2 transportation cards", cardIndex);
 	}
 	
-	@ParameterizedTest(name = "Test can't draw transportation card # {0} when there is not card there")
+	@ParameterizedTest(name = "Test cannot draw transportation card {0} when there is not card there")
 	@ValueSource(ints = {0, 1, 2, 3, 4, 5})
 	public void testCantDrawCardsWhenCardsAreDepleted(int cardIndex) {
 		if(cardIndex < 5) {
