@@ -178,6 +178,17 @@ class MoverTest {
 		when(mockedGameState.getNumTrainsRemaining())
 			.thenReturn(FXCollections.observableMap(Map.of(mockedPlayer, 100)));
 		
+		//Set up the user with a large hand so that we don't have to worry about making
+				//sure it can build each connection
+				Map<CardColor, Integer> hand = 
+						Arrays.stream(CardColor.values())
+							.collect(Collectors.toMap(
+									color -> color,
+									color -> 10
+									));
+				when(mockedGameState.getPlayersTransportationCardsHand(mockedPlayer)).thenReturn(FXCollections.observableMap(hand));
+				
+		
 		when(mockedGameState.drawTransportationCard(anyInt())).thenAnswer(invocation -> {
 			Integer index = invocation.getArgumentAt(0, Integer.class);
 			if(index == 5) {
