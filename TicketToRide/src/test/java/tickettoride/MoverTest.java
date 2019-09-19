@@ -202,6 +202,7 @@ class MoverTest {
 		
 		when(mockedConnection1to2.getNumSegments()).thenReturn(1);
 		when(mockedConnection1to2.getColor()).thenReturn(CardColor.GREEN);
+		when(mockedConnection1to2.getOwnerProperty()).thenReturn(new SimpleObjectProperty<>());
 		
 		
 		
@@ -248,7 +249,9 @@ class MoverTest {
 			.thenReturn(Set.of(conn1, conn2));
 		
 		
-		Stream.of(conn1, conn2).forEach(c -> when(c.getNumSegments()).thenReturn(num));
+		Stream.of(conn1, conn2)
+			.peek(conn -> when(conn.getOwnerProperty()).thenReturn(new SimpleObjectProperty<>()))
+			.forEach(conn -> when(conn.getNumSegments()).thenReturn(num));
 		when(conn1.getColor()).thenReturn(color1);
 		when(conn2.getColor()).thenReturn(color2);
 		return new Pair<>(conn1, conn2);
@@ -922,6 +925,7 @@ class MoverTest {
 		Connection mockedConnection = mock(Connection.class);
 		when(mockedConnection.getNumSegments()).thenReturn(2);
 		when(mockedConnection.getColor()).thenReturn(CardColor.ORANGE);
+		when(mockedConnection.getOwnerProperty()).thenReturn(new SimpleObjectProperty<>());
 
 		testCantBuildConnection(mockedConnection, Collections.nCopies(2,  CardColor.ORANGE));
 	}
@@ -977,6 +981,9 @@ class MoverTest {
 		
 		when(mockedConnection.getStart()).thenReturn(this.mockedDestination1);
 		when(mockedConnection.getEnd()).thenReturn(this.mockedDestination2);
+		
+		when(mockedConnection.getOwnerProperty()).thenReturn(new SimpleObjectProperty<>());
+
 		
 		when(mockedMapData.getConnections()).thenReturn(Collections.singleton(mockedConnection));
 		when(mockedMapData.getConnectionsToOrFromDest(any()))
