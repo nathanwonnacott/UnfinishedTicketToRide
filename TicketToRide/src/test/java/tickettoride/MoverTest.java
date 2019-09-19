@@ -175,6 +175,8 @@ class MoverTest {
 		when(mockedGameState.drawDestinationCards()).thenReturn(expectedDestinationOptions);
 		when(mockedGameState.getFaceUpTransportationCards()).thenReturn(faceUpTransportationCards);
 		when(mockedGameState.getTransportationCardsDeckRemainingProperty()).thenReturn(transportationCardDeckRemaining);
+		when(mockedGameState.getNumTrainsRemaining())
+			.thenReturn(FXCollections.observableMap(Map.of(mockedPlayer, 100)));
 		
 		when(mockedGameState.drawTransportationCard(anyInt())).thenAnswer(invocation -> {
 			Integer index = invocation.getArgumentAt(0, Integer.class);
@@ -828,7 +830,7 @@ class MoverTest {
 		when(mockedConnection1to2.getColor()).thenReturn(CardColor.BLACK);
 		
 		assertTrue(mover.canBuildConnection(mockedConnection1to2, 
-											List.of(CardColor.ANY, CardColor.BLUE, CardColor.ANY)));
+											List.of(CardColor.ANY, CardColor.BLACK, CardColor.ANY)));
 	}
 	
 
