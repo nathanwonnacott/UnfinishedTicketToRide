@@ -253,6 +253,8 @@ class MoverTest {
 		
 		Stream.of(conn1, conn2)
 			.peek(conn -> when(conn.getOwnerProperty()).thenReturn(new SimpleObjectProperty<>()))
+			.peek(conn -> when(conn.getStart()).thenReturn(mockedDestination1))
+			.peek(conn -> when(conn.getEnd()).thenReturn(mockedDestination2))
 			.forEach(conn -> when(conn.getNumSegments()).thenReturn(num));
 		when(conn1.getColor()).thenReturn(color1);
 		when(conn2.getColor()).thenReturn(color2);
